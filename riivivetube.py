@@ -1,26 +1,21 @@
+# used code and swf files from liinback and yt2009wii
+
 # work in progress
-# videos and more things are not working
-# search and trending is working
-# swf files from yt2009wii
 
 
 from flask import Flask, send_from_directory, send_file, request, Response, jsonify, stream_with_context
 import os
-import json
-import re
 import requests
 import xml.etree.ElementTree as ET
-from datetime import datetime
 import subprocess
 import time
-import yt_dlp
 import youtubei
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import threading
 
 app = Flask(__name__)
-#stream_cache = {}
-#CACHE_DURATION = 300
+stream_cache = {}
+CACHE_DURATION = 300
 executor = ThreadPoolExecutor(max_workers=10)
 CATEGORIES = ["trending", "music", "gaming", "sports", "news"]
 DL_FOLDER = "./dl"
@@ -33,7 +28,7 @@ def get_first_video_id_from_route(category):
         url = f"http://127.0.0.1:5005/{category}"
         response = requests.get(url)
         if response.status_code != 200:
-            print(f"[{category}] HTTP ERROR : HTTP {response.status_code}")
+            print(f"[{category}] Error fetching: HTTP {response.status_code}")
             return None
         ns = {
             'yt': 'http://www.youtube.com/xml/schemas/2015'
@@ -50,7 +45,7 @@ def get_first_video_id_from_route(category):
             return None
         return videoid_el.text.strip()
     except Exception as e:
-        print(f"[{category}] xml parsing error: {e}")
+        print(f"[{category}] XML parsing error: {e}")
         return None
 
 def download_thumbnail(video_id, category):
@@ -103,16 +98,16 @@ class GetVideoInfo:
         }
         response = requests.post(streamUrl, json=payload, headers=headers)
         if response.status_code != 200:
-            return f"Error retrieving video info: {response.status_code}", response.status_code
+            return f"video info error: {response.status_code}", response.status_code
         
         try:
             json_data = response.json()
-    #        print(json_data)
+    #   debug     print(json_data)
             title = json_data['videoDetails']['title']
             length_seconds = json_data['videoDetails']['lengthSeconds']
             author = json_data['videoDetails']['author']
         except KeyError as e:
-            return f"Missing key: {e}", 400
+            return f"KeyError ): {e}", 400
         
         fmtList = "43/854x480/9/0/115"
         fmtStreamMap = f"43|"
@@ -149,7 +144,7 @@ class GetVideoInfo:
 def get_video_info():
     video_id = request.args.get('video_id')
     if not video_id:
-        return jsonify({"error": "Missing video_id parameter"}), 400
+        return jsonify({"error": "video id is missing"}), 400
 
     video_info = GetVideoInfo().build(video_id)
     return video_info
@@ -170,9 +165,53 @@ def serve_video(filename):
 def player():
     return ""
 
-#@app.route('/get_video', methods=['GET'])
-#def get_video():
-#work in progress
+
+@app.route('/get_video', methods=['GET'])
+def get_video():
+    if not os.path.exists("sigma/videos"):
+        os.makedirs("sigma/videos")
+
+    video_id = request.args.get('video_id')
+    if not video_id:
+        return "", 400
+
+    folder = "sigma/videos"
+    mp4_path = os.path.join(folder, f"{video_id}.mp4")
+    webm_path = os.path.join(folder, f"{video_id}.webm")
+
+    if os.path.exists(webm_path):
+        return send_file(webm_path, as_attachment=True)
+
+    ytdlp_cmd = [
+        'yt-dlp',
+        f'https://www.youtube.com/watch?v={video_id}',
+        '-f', 'best[ext=mp4]/best',
+        '-o', mp4_path
+    ]
+
+    try:
+        result = subprocess.run(ytdlp_cmd, capture_output=True, text=True)
+        if result.returncode != 0:
+            return f"yt-dlp error: {result.stderr}", 500
+    except Exception as e:
+        return f"{e}", 500
+
+    if not os.path.exists(mp4_path):
+        return "Download failed", 500
+
+    vf = 'scale=-1:360'
+    ffmpeg_cmd = [
+        'ffmpeg', '-i', mp4_path,
+        '-vf', vf,
+        '-c:v', 'libvpx', '-b:v', '300k', '-cpu-used', '8',
+        '-pix_fmt', 'yuv420p', '-c:a', 'libvorbis', '-b:a', '128k',
+        '-r', '30', '-g', '30',
+        webm_path
+    ]
+
+    subprocess.run(ffmpeg_cmd)
+
+    return send_file(webm_path, as_attachment=True) if os.path.exists(webm_path) else "", 500
 
 
 @app.route('/apiplayer-loader')
