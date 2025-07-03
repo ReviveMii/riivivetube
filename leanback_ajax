@@ -1,0 +1,44 @@
+{
+  "sets": [
+    {
+      "title": "Trending",
+      "list_id": "trending",
+      "video_count": 50,
+      "thumbnail": "http://new.old.errexe.xyz/dl/trending.jpg",
+      "gdata_list_id": "Trending",
+      "gdata_url": "http://new.old.errexe.xyz/trending"
+    },
+    {
+      "title": "Music",
+      "list_id": "music",
+      "video_count": 25,
+      "thumbnail": "http://new.old.errexe.xyz/dl/music.jpg",
+      "gdata_list_id": "Music",
+      "gdata_url": "http://new.old.errexe.xyz/music"
+    },
+    {
+      "title": "Gaming",
+      "list_id": "gaming",
+      "video_count": 25,
+      "thumbnail": "http://new.old.errexe.xyz/dl/gaming.jpg",
+      "gdata_list_id": "Gaming",
+      "gdata_url": "http://new.old.errexe.xyz/gaming"
+    },
+    {
+      "title": "Sports",
+      "list_id": "sports",
+      "video_count": 25,
+      "thumbnail": "http://new.old.errexe.xyz/dl/sports.jpg",
+      "gdata_list_id": "Sports",
+      "gdata_url": "http://new.old.errexe.xyz/sports"
+    },
+    {
+      "title": "News",
+      "list_id": "news",
+      "video_count": 25,
+      "thumbnail": "http://new.old.errexe.xyz/dl/news.jpg",
+      "gdata_list_id": "News",
+      "gdata_url": "http://new.old.errexe.xyz/news"
+    }
+  ]
+}
