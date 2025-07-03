@@ -211,7 +211,7 @@ def get_video():
 
     subprocess.run(ffmpeg_cmd)
 
-    return send_file(webm_path, as_attachment=True) if os.path.exists(webm_path) else "", 500
+    return send_file(webm_path, as_attachment=True)
 
 
 @app.route('/apiplayer-loader')
