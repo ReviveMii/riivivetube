@@ -12,6 +12,8 @@ import time
 import youtubei
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import threading
+import re
+import json
 
 app = Flask(__name__)
 stream_cache = {}
@@ -164,6 +166,43 @@ def serve_video(filename):
 @app.route('/player_204')
 def player():
     return ""
+    
+@app.route('/complete/search')
+def completesearch():
+    query = request.args.get('q')
+    if not query:
+        return jsonify({"error": "Missing 'q' parameter"}), 400
+
+    suggest_url = (
+        "https://suggestqueries-clients6.youtube.com/complete/search"
+        "?ds=yt&hl=en&gl=de&client=youtube&gs_ri=youtube"
+        "&sugexp=uqap13ns10_e2,ytpso.bo.me=1,ytpsoso.bo.me=1,"
+        "ytpso.bo.bro.mi=51533027,ytpsoso.bo.bro.mi=51533027,"
+        "ytpso.bo.bro.vsw=1.0,ytpsoso.bo.bro.vsw=1.0,"
+        "ytpso.bo.bro.lsw=0.0,ytpsoso.bo.bro.lsw=0.0"
+        "&h=180&w=320&ytvs=1&gs_id=2&q=" + query
+    )
+
+    try:
+        response = requests.get(suggest_url)
+        if response.status_code != 200:
+            return jsonify({"error": f"Failed to fetch suggestions: HTTP {response.status_code}"}), 500
+        jsonp = response.text
+        json_str = re.search(r'\[.*\]', jsonp).group(0)
+        data = json.loads(json_str)
+        suggestions = [item[0] for item in data[1]]
+        root = ET.Element("toplevel")
+        for suggestion in suggestions:
+            complete_suggestion = ET.SubElement(root, "CompleteSuggestion")
+            suggestion_elem = ET.SubElement(complete_suggestion, "suggestion")
+            suggestion_elem.set("data", suggestion)
+        xml_string = ET.tostring(root, encoding="utf-8", method="xml").decode("utf-8")
+        xml_string = '<?xml version="1.0" encoding="UTF-8"?>' + xml_string
+
+        return Response(xml_string, mimetype='text/xml')
+
+    except Exception as e:
+        return jsonify({"error": f"Error processing suggestions: {str(e)}"}), 500
 
 
 @app.route('/get_video', methods=['GET'])
@@ -222,9 +261,6 @@ def loadapi():
 def playback():
     return send_from_directory('.', 'apiplayer.swf', mimetype='application/x-shockwave-flash')
 
-@app.route('/complete/search')
-def completesearch():
-    return send_file('search.js')
 
 class Invidious:
     def generateXML(self, json_data):
