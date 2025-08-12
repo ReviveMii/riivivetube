@@ -204,6 +204,92 @@ def completesearch():
     except Exception as e:
         return jsonify({"error": f"Error processing suggestions: {str(e)}"}), 500
 
+CONTENT_LENGTH = 50000000
+
+@app.route('/git_video', methods=['GET'])
+def git_video():
+    video_id = request.args.get('video_id')
+    if not video_id:
+        return "", 400
+
+    ytdlp_cmd = [
+        'yt-dlp',
+        f'https://www.youtube.com/watch?v={video_id}',
+        '-f', '5/18/best[ext=mp4]/best[height<=240]',
+        '--cookies', 'c.txt',
+        '-g'
+    ]
+
+    try:
+        result = subprocess.run(ytdlp_cmd, capture_output=True, text=True)
+        if result.returncode != 0:
+            return f"yt-dlp error: {result.stderr}", 500
+        video_url = result.stdout.strip()
+        if not video_url:
+            return "No video URL found", 500
+    except Exception as e:
+        return f"yt-dlp error: {e}", 500
+
+    range_header = request.environ.get('HTTP_RANGE', '')
+    range_start = 0
+    range_end = CONTENT_LENGTH - 1
+    status = '200 OK'
+    headers = [
+        ('Content-Type', 'video/x-flv'),
+        ('Content-Disposition', f'attachment; filename="{video_id}.flv"'),
+        ('Accept-Ranges', 'bytes'),
+        ('Content-Length', str(CONTENT_LENGTH))
+    ]
+
+    if range_header:
+        match = re.match(r'bytes=(\d+)-(\d*)', range_header)
+        if match:
+            range_start = int(match.group(1))
+            range_end = int(match.group(2)) if match.group(2) else CONTENT_LENGTH - 1
+            if range_start >= CONTENT_LENGTH or range_end >= CONTENT_LENGTH:
+                return "Range Not Satisfiable", 416
+            status = '206 Partial Content'
+            headers = [
+                ('Content-Type', 'video/x-flv'),
+                ('Content-Disposition', f'attachment; filename="{video_id}.flv"'),
+                ('Accept-Ranges', 'bytes'),
+                ('Content-Range', f'bytes {range_start}-{range_end}/{CONTENT_LENGTH}'),
+                ('Content-Length', str(range_end - range_start + 1))
+            ]
+
+    total_bitrate = 500000 + 96000
+    bytes_per_second = total_bitrate / 8
+    start_time = range_start / bytes_per_second
+    duration = (range_end - range_start + 1) / bytes_per_second
+
+    ffmpeg_cmd = [
+        'ffmpeg', '-i', video_url,
+        '-ss', str(start_time),
+        '-t', str(duration),
+        '-c:v', 'flv1', '-b:v', '500k', '-vf', 'scale=-1:240',
+        '-c:a', 'mp3', '-b:a', '96k',
+        '-r', '24', '-g', '24',
+        '-f', 'flv', 'pipe:1'
+    ]
+
+    def generate(environ, start_response):
+        start_response(status, headers)
+        try:
+            process = subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            while True:
+                chunk = process.stdout.read(8192)
+                if not chunk:
+                    break
+                yield chunk
+
+            stderr = process.communicate()[1]
+            if process.returncode != 0:
+                yield f"ffmpeg error: {stderr.decode()}".encode()
+        except Exception as e:
+            yield f"ffmpeg error: {str(e)}".encode()
+
+    return generate
+
 
 @app.route('/get_video', methods=['GET'])
 def get_video():
