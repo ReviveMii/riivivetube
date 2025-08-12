@@ -151,6 +151,61 @@ def get_video_info():
     video_info = GetVideoInfo().build(video_id)
     return video_info
 
+@app.route('/feeds/api/videos/<video_id>')
+def video_details(video_id):
+    try:
+        video_info = youtubei.get_video_info(video_id)
+        if not video_info:
+            return Response(
+                '<error>Video not found</error>',
+                mimetype='text/xml',
+                status=404
+            )
+
+        ns = {
+            'media': 'http://search.yahoo.com/mrss/',
+            'yt': 'http://www.youtube.com/xml/schemas/2015'
+        }
+        
+        root = ET.Element('entry')
+        ET.SubElement(root, 'id').text = f"http://127.0.0.1:5005/feeds/api/videos/{video_id}"
+        ET.SubElement(root, 'title').text = video_info.get('title', '')
+        ET.SubElement(root, 'published').text = video_info.get('publishedText', '')
+        author = ET.SubElement(root, 'author')
+        ET.SubElement(author, 'name').text = video_info.get('author', '')
+        media_group = ET.SubElement(root, 'media:group')
+        ET.SubElement(
+            media_group, 
+            'media:thumbnail', 
+            attrib={
+                'yt:name': 'hqdefault',
+                'url': f"http://i.ytimg.com/vi/{video_id}/hqdefault.jpg",
+                'width': '320',
+                'height': '240'
+            }
+        )
+        ET.SubElement(
+            media_group,
+            'yt:duration',
+            attrib={'seconds': str(video_info.get('lengthSeconds', 0))}
+        )
+        ET.SubElement(media_group, 'yt:videoid').text = video_id
+        stats = ET.SubElement(root, 'yt:statistics')
+        stats.set('viewCount', str(video_info.get('viewCount', 0)))
+        stats.set('likeCount', str(video_info.get('likeCount', 0)))
+        xml_str = ET.tostring(root, encoding='utf-8', method='xml').decode()
+        xml_str = f'<?xml version="1.0" encoding="UTF-8"?>\n{xml_str}'
+        
+        return Response(xml_str, mimetype='text/xml')
+
+    except Exception as e:
+        return Response(
+            f'<error>{str(e)}</error>',
+            mimetype='text/xml',
+            status=500
+        )
+
+
 @app.route("/wiitv")
 def wiitv():
     return send_from_directory(".", "leanbacklite_wii.swf", mimetype='application/x-shockwave-flash')
