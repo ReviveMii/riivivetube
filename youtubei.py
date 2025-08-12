@@ -3,7 +3,7 @@
 
 import requests
 
-YOUTUBE_INNERTUBE_API_KEY = "test"
+YOUTUBE_INNERTUBE_API_KEY = "key"
 YOUTUBE_API_URL = f"https://www.youtube.com/youtubei/v1/search?key={YOUTUBE_INNERTUBE_API_KEY}&region=US"
 YOUTUBE_API_BROWSE_URL = f"https://www.youtube.com/youtubei/v1/browse?key={YOUTUBE_INNERTUBE_API_KEY}"
 
@@ -27,6 +27,65 @@ def safe_int(value, default=0):
         return int(value)
     except (ValueError, TypeError):
         return default
+
+def get_video_info(video_id):
+    url = "https://www.youtube.com/youtubei/v1/player"
+    
+    headers = {
+        "User-Agent": "Mozilla/5.0",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Content-Type": "application/json",
+        "X-YouTube-Client-Name": "1",
+        "X-YouTube-Client-Version": "2.20231221"
+    }
+    
+    payload = {
+        "context": {
+            "client": {
+                "hl": "en",
+                "gl": "US",
+                "clientName": "WEB",
+                "clientVersion": "2.20231221"
+            }
+        },
+        "videoId": video_id
+    }
+    
+    try:
+        response = requests.post(url, json=payload, headers=headers)
+        response.raise_for_status()
+        data = response.json()
+        
+
+        video_details = data.get('videoDetails', {})
+        microformat = data.get('microformat', {}).get('playerMicroformatRenderer', {})
+        engagement = data.get('engagement', {})
+        
+
+        result = {
+            'videoId': video_id,
+            'title': video_details.get('title', ''),
+            'author': video_details.get('author', ''),
+            'authorId': video_details.get('channelId', ''),
+            'lengthSeconds': video_details.get('lengthSeconds', 0),
+            'viewCount': video_details.get('viewCount', 0),
+            'description': video_details.get('shortDescription', ''),
+            'publishedText': microformat.get('publishDate', ''),
+            'averageRating': engagement.get('averageRating', 0),
+            'likeCount': engagement.get('likeCount', 0),
+            'dislikeCount': engagement.get('dislikeCount', 0),
+            'keywords': video_details.get('keywords', []),
+            'isLive': video_details.get('isLive', False),
+            'thumbnail': {
+                'thumbnails': video_details.get('thumbnail', {}).get('thumbnails', [])
+            }
+        }
+        
+        return result
+        
+    except Exception as e:
+        print(f"Error fetching video info: {str(e)}")
+        return None
 
 def extract_length_text_and_seconds(vd):
     length_obj = vd.get("lengthText", {})
@@ -239,5 +298,5 @@ def innertube_trending(trending_type=None, region="US", max_results=50):
         return [parse_video(v) for v in videos]
 
     except Exception as e:
-        print("error:", e)
+        print("Trending Parsing Error:", e)
         return []
