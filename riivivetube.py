@@ -259,7 +259,7 @@ def completesearch():
     except Exception as e:
         return jsonify({"error": f"Error processing suggestions: {str(e)}"}), 500
 
-CONTENT_LENGTH = 50000000
+CONTENT_LENGTH = 500000000
 
 @app.route('/git_video', methods=['GET'])
 def git_video():
