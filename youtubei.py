@@ -282,6 +282,7 @@ def innertube_trending(trending_type=None, region="US", max_results=50):
             author = vd.get("ownerText", {}).get("runs", [{}])[0].get("text", "")
             thumbnails = vd.get("thumbnail", {}).get("thumbnails", [])
             view_count_text = vd.get("viewCountText", {}).get("simpleText", "")
+            view_count = parse_view_count(view_count_text)
             published_text = vd.get("publishedTimeText", {}).get("simpleText", "")
             length_text_obj, length_seconds = extract_length_text_and_seconds(vd)
             return {
@@ -289,7 +290,7 @@ def innertube_trending(trending_type=None, region="US", max_results=50):
                 "videoId": vid,
                 "author": author,
                 "videoThumbnails": thumbnails,
-                "viewCountText": view_count_text,
+                "viewCount": view_count,
                 "publishedText": published_text,
                 "lengthText": length_text_obj,
                 "lengthSeconds": length_seconds
