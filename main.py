@@ -34,8 +34,10 @@ import random
 import string
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from werkzeug.proxy_fix import ProxyFix
 
 app = Flask(__name__)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1)
 limiter = Limiter(
     app=app,
     key_func=get_remote_address,
