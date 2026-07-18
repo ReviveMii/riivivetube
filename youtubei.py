@@ -170,7 +170,7 @@ def _build_context(video_id=None, graft_url=None):
     }
 
 def get_video_info(video_id):
-    url = "https://www.youtube.com/youtubei/v1/next" # lower risk of being blocked because the next entpoint has a lower ratelimit than the player endpoint
+    url = "https://www.youtube.com/youtubei/v1/next" # lower risk of being blocked because the next entpoint has a lower ratelimit than the player endpoint. player endpoint ratelimits: ~1000 (player) requests per hour for logged-out sessions, ~4000 (player) requests per hour for logged-in accounts (cookies) (https://github.com/yt-dlp/yt-dlp/wiki/Extractors#common-youtube-errors)
     headers = _get_base_headers()
     payload = {
         "context": _build_context(video_id=video_id),
