@@ -1,0 +1,57 @@
+{
+  "sets": [
+    {
+      "title": "Trending",
+      "list_id": "trending",
+      "video_count": 5000,
+      "thumbnail": "http://ytv2.nossl.revivemii.xyz/dl/trending.jpg",
+      "gdata_list_id": "FLtrends",
+      "gdata_url": "http://ytv2.nossl.revivemii.xyz/feeds/api/users/trends/favorites",
+      "icon": "trends",
+      "tab": "featured"
+
+    },
+    {
+      "title": "Music",
+      "list_id": "music",
+      "video_count": 25,
+      "thumbnail": "http://ytv2.nossl.revivemii.xyz/dl/music.jpg",
+      "gdata_list_id": "STmost_popular_Music",
+      "gdata_url": "http://ytv2.nossl.revivemii.xyz/feeds/api/standardfeeds/US/most_popular_Music",
+      "icon": "music",
+      "tab": "featured"
+
+    },
+    {
+      "title": "Gaming",
+      "list_id": "gaming",
+      "video_count": 25,
+      "thumbnail": "http://ytv2.nossl.revivemii.xyz/dl/gaming.jpg",
+      "gdata_list_id": "Gaming",
+      "gdata_url": "http://ytv2.nossl.revivemii.xyz/feeds/api/standardfeeds/US/most_popular_Games",
+      "icon": "gaming",
+      "tab": "featured"
+
+    },
+    {
+      "title": "Sports",
+      "list_id": "sports",
+      "video_count": 25,
+      "thumbnail": "http://ytv2.nossl.revivemii.xyz/dl/sports.jpg",
+      "gdata_list_id": "Sports",
+      "gdata_url": "http://ytv2.nossl.revivemii.xyz/feeds/api/standardfeeds/US/most_popular_Sports",
+      "icon": "sports",
+      "tab": "featured"
+    },
+    {
+      "title": "News",
+      "list_id": "news",
+      "video_count": 25,
+      "thumbnail": "http://ytv2.nossl.revivemii.xyz/dl/news.jpg",
+      "gdata_list_id": "News",
+      "gdata_url": "http://ytv2.nossl.revivemii.xyz/feeds/api/standardfeeds/US/most_popular_News",
+      "icon": "news"
+
+    }
+  ]
+}

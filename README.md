@@ -1,36 +1,42 @@
 # RiiviveTube
 A Revival for the Wii YouTube App
 
-## Features
-- Videos
-- Pairing Devices
-- Searching Videos
-- Trending, Music, Gaming, Sports and News
+## Using the Public Instance
+Download the prepatched WAD [here](https://revivemii.xyz/riivivetube) or [patch your own WAD](https://github.com/ReviveMii/ReviveMiiPatcher)
+
+## Hosting your own Instance
+**RiiviveTube currently only supports Linux.** While running this on Windows may work, it is not supported
+
+**Requirements**: ffmpeg, git, python3 and pip
+
+Setup the Instance: ```git clone https://github.com/ReviveMii/riivivetube && cd riivivetube && bash scripts/setupInstance.sh```
+Install the dependencies: ```pip install -r requirements.txt``` 
+Start the Server (standard port is 5005): ```python3 main.py```
+
+Use the [Patcher](https://github.com/ReviveMii/ReviveMiiPatcher) to patch your WAD for your Instance
+
+If you want to avoid YouTube blocking your IP, use a [cookies.txt file](https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp)
+
+## Working Features
+- Search and play videos
+- Music, Gaming, Sports and News
 - Search Suggestions in Search
+- Sign-in (partially working)
+
+## TODO
+- Higher video quality
+- Fix 0 views on watch_later and watch_history (Signed-In)
+- Implement subscriptions, etc (Signed-In)
+- Implement Pairing/Lounge API Proxy
 
 ## Bugs
-- Random Crashes
-- Videos randomly stop playing
+- Random crashes (some have been patched)
 
-## Setup
-Download the WAD [here](https://revivemii.xyz/riivivetube) or from [WiiMart](https://wiimart.org) 
+## Discord
+Join our [Discord](https://discord.gg/yHva2ncjyx)
 
-
-## (Optional) Self Hosting and Patching
-Dump from your Wii / Download the Original YouTube WAD File
-
-Download JPEXS Free Flash Decompiler [here](https://github.com/jindrapetrik/jpexs-decompiler/releases/tag/version24.0.1). Replace every new.old.errexe.xyz with your Server IP or Local IP (192.168.*.*:port) in the .swf files in RiiviveTube and save the SWF Files
-
-Download [ShowMiiWads](https://wiibrew.org/wiki/ShowMiiWads) and [wszst](https://szs.wiimm.de/download.html) and unpack the WAD, unpack 00000002.app and open config/common.pcf and change dummy=1 to relax=2
-
-Open trusted/wii_shim.sef and change https://www.youtube.com/ to http://yourserverip:port/ (with HTTP) and save the file
-
-Repack 00000002.app and repack the WAD
-
-Patch the WAD with Wiimmfi with the [RiiConnect WiiWare Patcher](https://github.com/RiiConnect24/WiiWare-Patcher/releases/tag/v2.2.2)
-
-Open a private window in your Browser and login in YouTube, and go to robots.txt and export your Cookies in Netscape Format with a Browser Extension and close the Window, and save the Cookies in the RiiviveTube Folder in `c.txt`
-
-Install the WAD on your Wii
-
-Start the Server
+## Credits
+- [Liinback](https://github.com/RedFireMRT84/Liinback-v3) (RiiviveTube uses some XML functions from Liinback)
+- [yt2009-wii](https://github.com/erievs/yt2009-wii) (RiiviveTube's SWF Files are based of the yt2009wii SWF files)
+- [yt-dlp](https://github.com/yt-dlp/yt-dlp) (RiiviveTube uses YT-DLP to extract video streams and subtitles)
+- [ffmpeg](https://ffmpeg.org/) (used for converting videos)
