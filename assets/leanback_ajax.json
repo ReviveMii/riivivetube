@@ -1,17 +1,6 @@
 {
   "sets": [
     {
-      "title": "Trending",
-      "list_id": "trending",
-      "video_count": 5000,
-      "thumbnail": "http://ytv2.nossl.revivemii.xyz/dl/trending.jpg",
-      "gdata_list_id": "FLtrends",
-      "gdata_url": "http://ytv2.nossl.revivemii.xyz/feeds/api/users/trends/favorites",
-      "icon": "trends",
-      "tab": "featured"
-
-    },
-    {
       "title": "Music",
       "list_id": "music",
       "video_count": 25,
