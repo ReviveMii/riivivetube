@@ -439,20 +439,20 @@ def _start_transcode_job(video_id, flv_path):
 
 def _run_transcode_job(video_id, flv_path, job):
     tmp_path = job["tmp_path"]
+    downloaded_path = f"/tmp/{video_id}_src.mp4"
     try:
         ytdlp_cmd = [
             'yt-dlp',
             f'https://www.youtube.com/watch?v={video_id}',
-            '-f', '5/18/best[ext=mp4]/best[height<=240]',
+            '-f', '18',
             '--cookies', 'cookies.txt',
-            '-g'
+            '-o', downloaded_path
         ]
         result = subprocess.run(ytdlp_cmd, capture_output=True, text=True)
         if result.returncode != 0:
             raise RuntimeError(f"yt-dlp error: {result.stderr}")
-        video_url = result.stdout.strip()
-        if not video_url:
-            raise RuntimeError("No video URL found")
+        if not os.path.exists(downloaded_path):
+            raise RuntimeError("Download finished but file missing")
 
         duration = None
         try:
@@ -474,7 +474,7 @@ def _run_transcode_job(video_id, flv_path, job):
             job["ready"].set()
 
         ffmpeg_cmd = [
-            'ffmpeg', '-y', '-i', video_url,
+            'ffmpeg', '-y', '-i', downloaded_path,
             '-c:v', 'flv1', '-b:v', '500k', '-vf', 'scale=-1:240',
             '-c:a', 'mp3', '-b:a', '96k',
             '-r', '24', '-g', '24',
@@ -522,6 +522,11 @@ def _run_transcode_job(video_id, flv_path, job):
         job["done"].set()
         with _transcode_jobs_guard:
             _transcode_jobs.pop(video_id, None)
+        try:
+            if os.path.exists(downloaded_path):
+                os.remove(downloaded_path)
+        except Exception:
+            pass
 
 
 def _serve_cached_flv(flv_path, safe_id):
