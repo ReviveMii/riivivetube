@@ -7,7 +7,7 @@ Download the prepatched WAD [here](https://revivemii.xyz/riivivetube) or [patch 
 ## Hosting your own Instance
 **RiiviveTube currently only supports Linux.** While running this on Windows may work, it is not supported
 
-**Requirements**: ffmpeg, git, python3 and pip
+**Requirements**: ffmpeg, git, python3 with pip, Java OpenJDK 21
 
 Setup the Instance: ```git clone https://github.com/ReviveMii/riivivetube && cd riivivetube && bash scripts/setupInstance.sh```
 Install the dependencies: ```pip install -r requirements.txt``` 
@@ -24,10 +24,12 @@ If you want to avoid YouTube blocking your IP, use a [cookies.txt file](https://
 - Sign-in (partially working)
 
 ## TODO
-- Higher video quality
+- Higher video quality (360p)
 - Fix 0 views on watch_later and watch_history (Signed-In)
 - Implement subscriptions, etc (Signed-In)
 - Implement Pairing/Lounge API Proxy
+- Fully implement Subtitles
+
 
 ## Bugs
 - Random crashes (some have been patched)
