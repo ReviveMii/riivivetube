@@ -827,12 +827,12 @@ class Invidious:
 
         for item in json_data:
             xml_string += '<entry>'
-            xml_string += '<id>http://127.0.0.1/api/videos/' + self.escape_xml(item["videoId"]) + '</id>'
+            xml_string += '<id>http://ytv2.nossl.revivemii.xyz/api/videos/' + self.escape_xml(item["videoId"]) + '</id>'
             xml_string += '<published>' + self.escape_xml(item.get("publishedText", "")) + '</published>'
             xml_string += '<title type="text">' + self.escape_xml(item.get("title", "")) + '</title>'
-            xml_string += '<link rel="http://127.0.0.1/api/videos/' + self.escape_xml(item["videoId"]) + '/related"/>'
+            xml_string += '<link rel="http://ytv2.nossl.revivemii.xyz/api/videos/' + self.escape_xml(item["videoId"]) + '/related"/>'
             xml_string += '<author><name>' + self.escape_xml(item.get("author", "")) + '</name>'
-            xml_string += '<uri>http://127.0.0.1/api/channels/' + self.escape_xml(item.get("authorId", "")) + '</uri></author>'
+            xml_string += '<uri>http://ytv2.nossl.revivemii.xyz/api/channels/' + self.escape_xml(item.get("authorId", "")) + '</uri></author>'
             xml_string += '<media:group>'
             xml_string += '<media:thumbnail yt:name="hqdefault" url="http://i.ytimg.com/vi/' + self.escape_xml(item["videoId"]) + '/hqdefault.jpg" height="240" width="320" time="00:00:00"/>'
             xml_string += '<yt:duration seconds="' + self.escape_xml(str(item.get("lengthSeconds", 0))) + '"/>'
