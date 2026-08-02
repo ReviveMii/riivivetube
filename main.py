@@ -450,7 +450,9 @@ def _run_transcode_job(video_id, flv_path, job):
         ]
         result = subprocess.run(ytdlp_cmd, capture_output=True, text=True)
         if result.returncode != 0:
-            raise RuntimeError(f"yt-dlp error: {result.stderr}")
+            error_msg = f"yt-dlp error: {result.stderr}"
+            send_discord_error(video_id, error_msg)
+            raise RuntimeError(error_msg)
         if not os.path.exists(downloaded_path):
             raise RuntimeError("Download finished but file missing")
 
@@ -556,7 +558,34 @@ def _stream_known_length(path, job, range_start, range_end):
             pos += len(chunk)
             yield chunk
 
+def get_discord_webhook_url():
+    try:
+        with open("webhook.txt", "r", encoding="utf-8") as f:
+            return f.read().strip()
+    except Exception:
+        return ""
 
+def send_discord_error(video_id, error_message):
+    webhook_url = get_discord_webhook_url()
+    if not webhook_url:
+        print("ERROR: no webhook")
+        return
+    try:
+        payload = {
+            "embeds": [{
+                "title": "yt-dlp error occurred in /get_video",
+                "color": 15158332,
+                "fields": [
+                    {"name": "video_id", "value": video_id, "inline": True},
+                    {"name": "error", "value": f"```{error_message[:1000]}```", "inline": False}
+                ]
+            }]
+        }
+        requests.post(webhook_url, json=payload, timeout=5)
+    except Exception as e:
+        print(f"webhook error: {e}")
+            
+            
 @app.route('/get_video', methods=['GET'])
 @limiter.limit("20 per minute")
 def get_video():
@@ -1005,6 +1034,10 @@ def serve_thumbnail(category):
 def cookiestxt():
     abort(404)
 
+@app.route("/webhook.txt")
+def cookiestxt():
+    abort(404)
+    
 @app.route("/<path:filename>")
 def serve_video(filename):
     file_path = os.path.join(filename)
