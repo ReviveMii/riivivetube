@@ -1035,7 +1035,7 @@ def cookiestxt():
     abort(404)
 
 @app.route("/webhook.txt")
-def cookiestxt():
+def webhooktxt():
     abort(404)
     
 @app.route("/<path:filename>")
