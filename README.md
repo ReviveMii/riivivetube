@@ -29,7 +29,7 @@ If you want to avoid YouTube blocking your IP, use a [cookies.txt file](https://
 - Implement subscriptions, etc (Signed-In)
 - Implement Pairing/Lounge API Proxy
 - Fully implement Subtitles
-
+- Implement Pagination
 
 ## Bugs
 - Random crashes (some have been patched)
