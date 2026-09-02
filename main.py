@@ -58,6 +58,7 @@ CATEGORY_MAP = {
 
 thumbnail_url_cache = {}
 FLV_FOLDER = "./flvcache"
+MESSAGES_FOLDER = "./assets/messages"
 _transcode_jobs_guard = threading.Lock()
 _transcode_jobs = {}
 TARGET_BITRATE_BPS = 500_000 + 96_000
@@ -363,19 +364,56 @@ def feeds_favorites_default():
     return Response(xml_data, mimetype="text/atom+xml")
 
 
-
+@app.route("/leanbacklite")
 @app.route("/wiitv")
 def wiitv():
+    get_messages = request.args.get("action_get_versioned_xlb")
+    get_flashvars = request.args.get("action_get_flashvars")
+    vendor = request.args.get("vendor","NINTENDO")
+    model = request.args.get("model","wii")
+    if get_messages:
+        locale = request.args.get("hl","en_US")
+        messages_path = os.path.join(MESSAGES_FOLDER,f"messages_{locale}.xml")
+        fallback_message = os.path.join(MESSAGES_FOLDER,"messages_en_US.xml")
+        if not os.path.exists(messages_path):
+            return send_file(fallback_message, mimetype="text/xml")
+        return send_file(messages_path, mimetype="text/xml")
+    if get_flashvars:
+        flashvars = {
+            "enabled_features": "captions",
+            "gdata_url": "http://ytv2.nossl.revivemii.xyz",
+            "country": request.args.get("country") or "US",
+            "vendor": vendor or "NINTENDO",
+            "model": model or "wii",
+            "cc_load_policy": "3",
+            "captions": "1",
+            "base_url": "http://ytv2.nossl.revivemii.xyz",
+            "ps": "lbl",
+            "el": "leanback",
+            "ea": "1",
+            "upgrade_notify": "",
+            "upgrade_forced": "",
+            "upgrade_bg": "http://ytv2.nossl.revivemii.xyz/upgrade_bg"
+        }
+        return Response(urlencode(flashvars), status=200, headers={"Content-Type": "application/x-www-form-urlencoded"})
     return send_from_directory("assets", "leanbacklite_wii.swf", mimetype='application/x-shockwave-flash')
+
+@app.get("/upgrade_bg")
+def upgrade_bg():
+    upgrade_bg_path = os.path.join("assets","upgrade_bg.jpg")
+    if os.path.exists(upgrade_bg_path):
+        return send_file(upgrade_bg_path)
+    else:
+        return abort(404)
 
 @app.route("/leanback_ajax")
 def leanbackajax():
     return send_from_directory("assets", "leanback_ajax.json", mimetype='application/json')
 
-
+@app.route("/set_awesome")
 @app.route('/player_204')
 def player():
-    return ""
+    return Response(status=204)
 
 @app.route('/complete/search')
 def completesearch():

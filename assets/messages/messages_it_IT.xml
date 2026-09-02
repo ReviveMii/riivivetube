@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<localizationbundle>
+  <messages>
+    <msg name="AD_TIMING">Pubblicità (&lt;ph name="AD_TIMING_MIN"&gt;&lt;ex&gt;0:15&lt;/ex&gt;%1&lt;/ph&gt;)</msg>
+    <msg name="AD_SKIP_IN">Saltabile tra &lt;ph name="CAN_SKIP_IN"&gt;&lt;ex&gt;5&lt;/ex&gt;%1&lt;/ph&gt;s</msg>
+    <msg name="AD_SKIPPABLE">Questa pubblicità può essere saltata</msg>
+    <msg name="AD">Pubblicità</msg>
+    <msg name="CANCEL_BTN">ANNULLA</msg>
+    <msg name="VIDEO_WILL_PLAY_IN">Il tuo video inizierà tra &lt;ph name="AD_TIME_LEFT"&gt;&lt;ex&gt;0:15&lt;/ex&gt;%1&lt;/ph&gt;s</msg>
+    <msg name="ERROR_VIDEO_PLAYBACK">Questo video non è disponibile.</msg>
+    <msg name="ERROR_AUTOPLAY_MESSAGE">Il prossimo video partirà tra &lt;ph name="DIALOG_TIMEOUT"&gt;&lt;ex&gt;5&lt;/ex&gt;%1&lt;/ph&gt; secondi...</msg>
+    <msg name="ERROR_MESSAGE_TIMEOUT">Questo messaggio scomparirà tra &lt;ph name="DIALOG_TIMEOUT"&gt;&lt;ex&gt;5&lt;/ex&gt;%1&lt;/ph&gt; secondi.</msg>
+    <msg name="FAVORITES_CHANNEL">Preferiti</msg>
+    <msg name="HELP_AND_TERMS">Guida e Termini</msg>
+    <msg name="HELP_CONTENT">Per visualizzare i Termini di servizio e la nostra Informativa sulla privacy, visita il computer: &lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;&lt;ph name="START_LINK_TERMS"&gt;http://www.youtube.com/t/terms&lt;/ph&gt;&lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;&lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;Per l'assistenza clienti visita il computer: &lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;&lt;ph name="START_LINK_SUPPORT"&gt;http://www.youtube.com/console_support&lt;/ph&gt;</msg>
+    <msg name="LOADING">Caricamento...</msg>
+    <msg name="META_VIEWS">VISUALIZZAZIONI</msg>
+    <msg name="MY_YOUTUBE_CHANNELS">Il mio YouTube</msg>
+    <msg name="NO_RESULTS">Nessun risultato</msg>
+    <msg name="TUMBLER_OFF">Spento</msg>
+    <msg name="TUMBLER_ON">Acceso</msg>
+    <msg name="SAFETY_MODE">Modalità di protezione</msg>
+    <msg name="SAFETY_MODE_ALL_USERS_2">Attiva per tutti gli utenti di questa Wii</msg>
+    <msg name="SAFETY_MODE_DESCRIPTION">Attiva la modalità sicura per evitare video con contenuti potenzialmente inappropriati. La modalità sicura utilizza segnalazioni della community e altri segnali per filtrare i video inappropriati. Non garantisce il blocco di tutti i contenuti inappropriati.</msg>
+    <msg name="SAFETY_MODE_ENABLED_BY_2">La modalità sicura è stata attivata da &lt;ph name="USERNAME"&gt;&lt;ex&gt;Admin&lt;/ex&gt;%1&lt;/ph&gt;. La modalità sicura blocca contenuti inappropriati su questa Wii.&lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;Accedi come &lt;ph name="USERNAME"&gt;&lt;ex&gt;Admin&lt;/ex&gt;%1&lt;/ph&gt; per disattivare la modalità sicura.</msg>
+    <msg name="SAFETY_MODE_MY_ACCOUNT">Attiva per il mio account</msg>
+    <msg name="SAFETY_MODE_OFF">Disattivata</msg>
+    <msg name="SAFETY_MODE_OPTIONS">Opzioni modalità sicura</msg>
+    <msg name="SAFETY_MODE_SIGN_IN_TO_ENABLE">&lt;ph name="START_PART_1"&gt;&amp;lt;font size="30"&amp;gt;&lt;/ph&gt;Accedi per attivare la modalità sicura&lt;ph name="END_PART"&gt;&amp;lt;/font&amp;gt;&lt;/ph&gt;&lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;Dopo l'attivazione, i video con contenuti potenzialmente inappropriati verranno nascosti.</msg>
+    <msg name="SEARCHING_PROCESS">Ricerca in corso per:</msg>
+    <msg name="SIGN_IN_AND_SETTINGS">Accedi e impostazioni</msg>
+    <msg name="SIGN_IN_CHANNEL">Accedi</msg>
+    <msg name="SIGN_IN_INSTRUCTIONS_1">Per usare YouTube sulla tua TV...</msg>
+    <msg name="SIGN_IN_INSTRUCTIONS_2">Visita &lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;&lt;ph name="START_PART_1"&gt;&amp;lt;font color="#FFFFFF"&amp;gt;&lt;/ph&gt;&lt;ph name="OAUTH_URL"&gt;&lt;ex&gt;youtube.com/activate&lt;/ex&gt;%1&lt;/ph&gt;&lt;ph name="END_PART"&gt;&amp;lt;/font&amp;gt;&lt;/ph&gt;&lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;Inserisci il codice: &lt;ph name="START_PART_3"&gt;&amp;lt;font color="#9A0B0B" size="30"&amp;gt;&lt;/ph&gt;&lt;ph name="CODE"&gt;&lt;ex&gt;abc123edf&lt;/ex&gt;%1&lt;/ph&gt;&lt;ph name="END_PART"&gt;&amp;lt;/font&amp;gt;&lt;/ph&gt;</msg>
+    <msg name="SIGN_IN_INSTRUCTIONS_3">Faremo tutto il resto e confermeremo sullo schermo a breve.</msg>
+    <msg name="SIGN_OUT_CHANNEL">Disconnetti</msg>
+    <msg name="SUBSCRIPTIONS_CHANNEL">Iscrizioni</msg>
+    <msg name="UPLOADS_CHANNEL">Caricamenti</msg>
+    <msg name="USER_PLAYLISTS_TITLE">Playlist</msg>
+    <msg name="VIDEO_DURATION_AND_VIEWS">&lt;ph name="DURATION"&gt;&lt;ex&gt;3:15&lt;/ex&gt;%1&lt;/ph&gt; | &lt;ph name="VIEWS"&gt;&lt;ex&gt;432.345&lt;/ex&gt;%1&lt;/ph&gt;</msg>
+    <msg name="FLAG_VIDEO">Segnala questo video</msg>
+    <msg name="FLAG_WEB">Segnala questo video</msg>
+    <msg name="FLAG_WEB_DESC">Visita questo video sul computer e clicca sull'icona della bandiera per segnalare:</msg>
+    <msg name="IMPROVE_YOUTUBE_TITLE">Migliora YouTube</msg>
+    <msg name="IMPROVE_YOUTUBE_ENABLE">Contribuisci a migliorare YouTube inviando dati anonimi di utilizzo</msg>
+    <msg name="CHECK_SETTINGS">Controlla impostazioni</msg>
+    <msg name="RETRY">Riprova</msg>
+    <msg name="PAIR_MENU_TITLE">Accoppia Dispositivo</msg>
+    <msg name="PAIR_MENU_SUBTITLE">Sincronizza lo schermo con un dispositivo mobile.</msg>
+    <msg name="PAIR_CLEAR_DEVICES">Rimuovi dispositivi accoppiati</msg>
+    <msg name="PAIR_NO_DEVICES">Nessun dispositivo connesso al momento.</msg>
+    <msg name="PAIR_DEVICES">Dispositivi connessi:</msg>
+    <msg name="PAIR_DEVICE">ACCOPPIA DISPOSITIVO</msg>
+    <msg name="OPENSSL_ATTRIBUTION">Questo prodotto include software sviluppato dal progetto OpenSSL utilizzato negli strumenti OpenSSL: &lt;ph name="OPENSSL_URL"&gt;www.openssl.org&lt;/ph&gt;</msg>
+    <msg name="WHAT_TO_WATCH">Che cosa guardare</msg>
+    <msg name="WATCH_LATER">Guarda più tardi</msg>
+    <msg name="WATCH_HISTORY">Cronologia visualizza</msg>
+    <msg name="UPGRADE_TITLE">Una nuova versione dell'app YouTube è disponibile.</msg>
+    <msg name="UPGRADE_REASON_1">È più veloce, affidabile e consente di usare il tuo smartphone come telecomando.</msg>
+    <msg name="UPGRADE_REASON_2">Questo aggiornamento migliora le prestazioni e l'affidabilità della riproduzione video.</msg>
+    <msg name="UPGRADE_INSTRUCTIONS">Per scaricarla: vai al Canale Wii Shop e seleziona Canali Wii.</msg>
+    <msg name="UPGRADE_DOWNLOAD">Scarica dal Wii Shop</msg>
+    <msg name="UPGRADE_LATER">Più tardi</msg>
+    <msg name="UPGRADE_DOWNLOAD_LATER">Scarica più tardi</msg>
+    <msg name="WATCH_LATER_EMPTY">La tua lista "Guarda più tardi" è attualmente vuota.</msg>
+    <msg name="WATCH_LATER_INSTRUCTIONS">Salva i video da youtube.com e guardali più tardi sulla tua Wii. Clicca su "Guarda più tardi" per aggiungere video a questa lista.</msg>
+    <msg name="REPORT">Segnala un problema.</msg>
+    <msg name="REPORT_SUCCESS">Il tuo rapporto sul problema è stato inviato con successo.</msg>
+  </messages>
+</localizationbundle>

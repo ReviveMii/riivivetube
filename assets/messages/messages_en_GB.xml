@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<localizationbundle>
+  <messages>
+    <msg name="AD_TIMING">Advertisement (&lt;ph name="AD_TIMING_MIN"&gt;&lt;ex&gt;0:15&lt;/ex&gt;%1&lt;/ph&gt;)</msg>
+    <msg name="AD_SKIP_IN">You can skip in &lt;ph name="CAN_SKIP_IN"&gt;&lt;ex&gt;5&lt;/ex&gt;%1&lt;/ph&gt;s</msg>
+    <msg name="AD_SKIPPABLE">You can skip this ad</msg>
+    <msg name="AD">Advertisement</msg>
+    <msg name="CANCEL_BTN">CANCEL</msg>
+    <msg name="VIDEO_WILL_PLAY_IN">Your video will play in &lt;ph name="AD_TIME_LEFT"&gt;&lt;ex&gt;0:15&lt;/ex&gt;%1&lt;/ph&gt;s</msg>
+    <msg name="ERROR_VIDEO_PLAYBACK">This video is not available.</msg>
+    <msg name="ERROR_AUTOPLAY_MESSAGE">Next video starts in &lt;ph name="DIALOG_TIMEOUT"&gt;&lt;ex&gt;5&lt;/ex&gt;%1&lt;/ph&gt; seconds...</msg>
+    <msg name="ERROR_MESSAGE_TIMEOUT">This message will go away in &lt;ph name="DIALOG_TIMEOUT"&gt;&lt;ex&gt;5&lt;/ex&gt;%1&lt;/ph&gt; seconds.</msg>
+    <msg name="FAVORITES_CHANNEL">Favorites</msg>
+    <msg name="LIKED_VIDEOS_CHANNEL">Liked Videos</msg>
+    <msg name="HELP_AND_TERMS">Help &amp; Terms</msg>
+    <msg name="HELP_CONTENT">For terms of service and our privacy policy, on your computer go to:&lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;&lt;ph name="START_LINK_TERMS"&gt;http://www.youtube.com/t/terms&lt;/ph&gt;&lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;&lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;For customer support, on your computer go to:&lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;&lt;ph name="START_LINK_SUPPORT"&gt;http://www.youtube.com/console_support&lt;/ph&gt;</msg>
+    <msg name="LOADING">Loading...</msg>
+    <msg name="META_VIEWS">NUMBER_OF_VIEWS</msg>
+    <msg name="MY_YOUTUBE_CHANNELS">My YouTube</msg>
+    <msg name="NO_RESULTS">No results</msg>
+    <msg name="TUMBLER_OFF">Off</msg>
+    <msg name="TUMBLER_ON">On</msg>
+    <msg name="SAFETY_MODE">Safety mode</msg>
+    <msg name="SAFETY_MODE_ALL_USERS_2">Turn on for every user of this Wii</msg>
+    <msg name="SAFETY_MODE_DESCRIPTION">Enable Safety Mode to avoid videos that may contain inappropriate content. Safety Mode uses community flagging and other signals to identify and filter out objectionable videos. Safety Mode does not guarantee to block every such video.</msg>
+    <msg name="SAFETY_MODE_ENABLED_BY_2">Safety Mode has been enabled by user &lt;ph name="USERNAME"&gt;&lt;ex&gt;Admin&lt;/ex&gt;%1&lt;/ph&gt;. Safety Mode blocks inappropriate content on this Wii.&lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;Sign in as &lt;ph name="USERNAME"&gt;&lt;ex&gt;Admin&lt;/ex&gt;%1&lt;/ph&gt; to turn Safety Mode off.</msg>
+    <msg name="SAFETY_MODE_MY_ACCOUNT">Turn on for my account</msg>
+    <msg name="SAFETY_MODE_OFF">Off</msg>
+    <msg name="SAFETY_MODE_OPTIONS">Safety mode options</msg>
+    <msg name="SAFETY_MODE_SIGN_IN_TO_ENABLE">&lt;ph name="START_PART_1"&gt;&amp;lt;font size="30"&amp;gt;&lt;/ph&gt;Sign in to enable safety mode&lt;ph name="END_PART"&gt;&amp;lt;/font&amp;gt;&lt;/ph&gt;&lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;Once enabled, avoid videos that may contain inappropriate content.</msg>
+    <msg name="SEARCHING_PROCESS">Searching for:</msg>
+    <msg name="SIGN_IN_AND_SETTINGS">Sign In &amp; Settings</msg>
+    <msg name="SIGN_IN_CHANNEL">Sign In</msg>
+    <msg name="SIGN_IN_INSTRUCTIONS_1">To sign in to YouTube on your TV...</msg>
+    <msg name="SIGN_IN_INSTRUCTIONS_2">Go To&lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;&lt;ph name="START_PART_1"&gt;&amp;lt;font color="#FFFFFF"&amp;gt;&lt;/ph&gt;&lt;ph name="OAUTH_URL"&gt;&lt;ex&gt;youtube.com/activate&lt;/ex&gt;%1&lt;/ph&gt;&lt;ph name="END_PART"&gt;&amp;lt;/font&amp;gt;&lt;/ph&gt;&lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;Enter&lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;&lt;ph name="START_PART_3"&gt;&amp;lt;font color="#9A0B0B" size="30"&amp;gt;&lt;/ph&gt;&lt;ph name="CODE"&gt;&lt;ex&gt;abc123edf&lt;/ex&gt;%1&lt;/ph&gt;&lt;ph name="END_PART"&gt;&amp;lt;/font&amp;gt;&lt;/ph&gt;</msg>
+    <msg name="SIGN_IN_INSTRUCTIONS_3">We'll do the rest and confirm on screen shortly.</msg>
+    <msg name="SIGN_OUT_CHANNEL">Sign Out</msg>
+    <msg name="SUBSCRIPTIONS_CHANNEL">Subscriptions</msg>
+    <msg name="UPLOADS_CHANNEL">Uploads</msg>
+    <msg name="USER_PLAYLISTS_TITLE">Playlists</msg>
+    <msg name="VIDEO_DURATION_AND_VIEWS">&lt;ph name="DURATION"&gt;&lt;ex&gt;3:15&lt;/ex&gt;%1&lt;/ph&gt; | &lt;ph name="VIEWS"&gt;&lt;ex&gt;432,345&lt;/ex&gt;%1&lt;/ph&gt;</msg>
+    <msg name="FLAG_VIDEO">Flag this video</msg>
+    <msg name="FLAG_WEB">To Flag this video</msg>
+    <msg name="FLAG_WEB_DESC">Visit this video on your computer or laptop and click the flag icon to submit a claim:</msg>
+    <msg name="FLAGGING_DESCRIPTION">Please select the category that most closely reflects your concern about the video.</msg>
+    <msg name="FLAG_FOR">Flag for</msg>
+    <msg name="FLAGGED_FOR">Flagged for</msg>
+    <msg name="FLAG_SEXUAL_CONTENT">Sexual Content</msg>
+    <msg name="FLAG_GRAPHIC_SEXUAL_ACTIVITY">Graphic Sexual Activity</msg>
+    <msg name="FLAG_NUDITY">Nudity</msg>
+    <msg name="FLAG_SUGGESTIVE_BUT_WITHOUT_NUDITY">Suggestive, but Without Nudity</msg>
+    <msg name="FLAG_OTHER_SEXUAL_CONTENT">Other Sexual Content</msg>
+    <msg name="FLAG_VIOLENT_OR_REPULSIVE_CONTENT">Violent or Repulsive Content</msg>
+    <msg name="FLAG_ADULTS_FIGHTING">Adults Fighting</msg>
+    <msg name="FLAG_PHYSICAL_ATTACK">Physical Attack</msg>
+    <msg name="FLAG_YOUTH_VIOLENCE">Youth Violence</msg>
+    <msg name="FLAG_ANIMAL_ABUSE">Animal Abuse</msg>
+    <msg name="FLAG_PROMOTES_TERRORISM">Promotes Terrorism</msg>
+    <msg name="FLAG_HATEFUL_OR_ABUSIVE_CONTENT">Hateful or Abusive Content</msg>
+    <msg name="FLAG_PROMOTES_HATRED_OR_VIOLENCE">Promotes Hatred or Violence</msg>
+    <msg name="FLAG_ABUSING_VULNERABLE_INDIVIDUALS">Abusing Vulnerable Individuals</msg>
+    <msg name="FLAG_BULLYING">Bullying</msg>
+    <msg name="FLAG_HARMFUL_DANGEROUS_ACTS">Harmful Dangerous Acts</msg>
+    <msg name="FLAG_DRUG_ABUSE">Drug Abuse</msg>
+    <msg name="FLAG_ABUSE_OF_FIRE_OR_EXPLOSIVES">Abuse of Fire or Explosives</msg>
+    <msg name="FLAG_OTHER_DANGEROUS_ACTS">Other Dangerous Acts</msg>
+    <msg name="FLAG_CHILD_ABUSE">Child Abuse</msg>
+    <msg name="FLAG_SPAM">Spam</msg>
+    <msg name="FLAG_MASS_ADVERTISING">Mass Advertising</msg>
+    <msg name="FLAG_MISLEADING_TEXT">Misleading Text</msg>
+    <msg name="FLAG_MISLEADING_THUMBNAIL">Misleading Thumbnail</msg>
+    <msg name="FLAG_SCAMS_FRAUD">Scams Or Fraud</msg>
+    <msg name="FLAG_INFRINGES_MY_RIGHTS">Infringes My Rights</msg>
+    <msg name="FLAG_INFRINGES_MY_COPYRIGHT">Infringes My Copyright</msg>
+    <msg name="FLAG_INVADES_MY_PRIVACY">Invades My Privacy</msg>
+    <msg name="FLAG_OTHER_LEGAL_CLAIM">Other Legal Claim</msg>
+    <msg name="IMPROVE_YOUTUBE_TITLE">Improve YouTube</msg>
+    <msg name="IMPROVE_YOUTUBE_ENABLE">Help improve YouTube by sending anonymous usage data</msg>
+    <msg name="CHECK_SETTINGS">Check settings</msg>
+    <msg name="RETRY">Retry</msg>
+    <msg name="PAIR_MENU_TITLE">Pair</msg>
+    <msg name="PAIR_MENU_SUBTITLE">Pair your screen with a mobile device</msg>
+    <msg name="PAIR_CLEAR_DEVICES">Clear paired devices</msg>
+    <msg name="PAIR_NO_DEVICES">No devices are connected at this time.</msg>
+    <msg name="PAIR_DEVICES">Connected devices:</msg>
+    <msg name="PAIR_DEVICE">PAIR DEVICE</msg>
+    <msg name="OPENSSL_ATTRIBUTION">This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit: &lt;ph name="OPENSSL_URL"&gt;www.openssl.org&lt;/ph&gt;</msg>
+    <msg name="WHAT_TO_WATCH">What to Watch</msg>
+    <msg name="WATCH_LATER">Watch Later</msg>
+    <msg name="WATCH_HISTORY">Watch History</msg>
+    <msg name="UPGRADE_TITLE">A new version of the YouTube app is available.</msg>
+    <msg name="UPGRADE_REASON_1">It's much faster, more reliable and allows you to use your smartphone as a remote control.</msg>
+    <msg name="UPGRADE_REASON_2">This update improves performance and reliability of video playback.</msg>
+    <msg name="UPGRADE_INSTRUCTIONS">&lt;ph name="START_LINE1"&gt;&amp;lt;font color="#F1F1F1" size="26"&amp;gt;&lt;/ph&gt;To download:&lt;ph name="END_LINE1"&gt;&amp;lt;/font&amp;gt;&lt;/ph&gt;&lt;ph name="BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;&lt;ph name="START_LINE2"&gt;&amp;lt;font color="#CCCCCC" size="18"&amp;gt;&lt;/ph&gt;Go to the Wii Shop channel and select Wii Channels.&lt;ph name="END_LINE2"&gt;&amp;lt;/font&amp;gt;&lt;/ph&gt;</msg>
+    <msg name="UPGRADE_DOWNLOAD">Download from the Wii Shop</msg>
+    <msg name="UPGRADE_LATER">Later</msg>
+    <msg name="UPGRADE_DOWNLOAD_LATER">Download Later</msg>
+    <msg name="WATCH_LATER_EMPTY">Your Watch Later list is currently empty.</msg>
+    <msg name="WATCH_LATER_INSTRUCTIONS">Save videos you find on youtube.com and watch them later on your Wii. Click the "Watch Later" button to add them to this list.</msg>
+    <msg name="REPORT">Report a problem.</msg>
+    <msg name="REPORT_SUCCESS">Your problem report has been submitted successfully.</msg>
+  </messages>
+</localizationbundle>
