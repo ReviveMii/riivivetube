@@ -367,8 +367,8 @@ def feeds_favorites_default():
 @app.route("/leanbacklite")
 @app.route("/wiitv")
 def wiitv():
-    get_messages = request.args.get("action_get_versioned_xlb")
-    get_flashvars = request.args.get("action_get_flashvars")
+    get_messages = "action_get_versioned_xlb" in request.args
+    get_flashvars = "action_get_flashvars" in request.args
     vendor = request.args.get("vendor","NINTENDO")
     model = request.args.get("model","wii")
     if get_messages:
