@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<localizationbundle>
+  <messages>
+    <msg name="AD_TIMING">広告 (<ph name="AD_TIMING_MIN"><ex>0:15</ex>%1</ph>)</msg>
+    <msg name="AD_SKIP_IN">スキップ可能まで <ph name="CAN_SKIP_IN"><ex>5</ex>%1</ph>秒</msg>
+    <msg name="AD_SKIPPABLE">この広告はスキップできます</msg>
+    <msg name="AD">広告</msg>
+    <msg name="CANCEL_BTN">キャンセル</msg>
+    <msg name="VIDEO_WILL_PLAY_IN">動画は <ph name="AD_TIME_LEFT"><ex>0:15</ex>%1</ph> 秒後に再生されます</msg>
+    <msg name="ERROR_VIDEO_PLAYBACK">この動画は利用できません。</msg>
+    <msg name="ERROR_AUTOPLAY_MESSAGE">次の動画は <ph name="DIALOG_TIMEOUT"><ex>5</ex>%1</ph> 秒後に再生されます...</msg>
+    <msg name="ERROR_MESSAGE_TIMEOUT">このメッセージは <ph name="DIALOG_TIMEOUT"><ex>5</ex>%1</ph> 秒後に消えます。</msg>
+    <msg name="FAVORITES_CHANNEL">お気に入り</msg>
+    <msg name="HELP_AND_TERMS">ヘルプと利用規約</msg>
+    <msg name="HELP_CONTENT">利用規約とプライバシーポリシーについては、コンピューターで以下にアクセスしてください。<ph name="START_BR">&lt;br&gt;</ph><ph name="START_LINK_TERMS">http://www.youtube.com/t/terms</ph><ph name="START_BR">&lt;br&gt;</ph><ph name="START_BR">&lt;br&gt;</ph>カスタマーサポートについては、コンピューターで以下にアクセスしてください。<ph name="START_BR">&lt;br&gt;</ph><ph name="START_LINK_SUPPORT">http://www.youtube.com/console_support</ph></msg>
+    <msg name="LOADING">読み込み中...</msg>
+    <msg name="META_VIEWS">視聴回数</msg>
+    <msg name="MY_YOUTUBE_CHANNELS">マイ YouTube</msg>
+    <msg name="NO_RESULTS">結果がありません</msg>
+    <msg name="TUMBLER_OFF">オフ</msg>
+    <msg name="TUMBLER_ON">オン</msg>
+    <msg name="SAFETY_MODE">セーフティモード</msg>
+    <msg name="SAFETY_MODE_ALL_USERS_2">このWiiの全ユーザーに適用</msg>
+    <msg name="SAFETY_MODE_DESCRIPTION">不適切な内容を含む可能性のある動画を回避するためにセーフティモードを有効にします。コミュニティの通報やその他のシグナルを使用して不適切な動画を特定・フィルタリングします。全ての動画がブロックされることは保証されません。</msg>
+    <msg name="SAFETY_MODE_ENABLED_BY_2">ユーザー <ph name="USERNAME"><ex>Admin</ex>%1</ph> によりセーフティモードが有効化されました。セーフティモードはこのWiiで不適切なコンテンツをブロックします。<ph name="START_BR">&lt;br&gt;</ph><ph name="USERNAME"><ex>Admin</ex>%1</ph> としてログインすると、セーフティモードを無効にできます。</msg>
+    <msg name="SAFETY_MODE_MY_ACCOUNT">自分のアカウントで有効にする</msg>
+    <msg name="SAFETY_MODE_OFF">オフ</msg>
+    <msg name="SAFETY_MODE_OPTIONS">セーフティモードの設定</msg>
+    <msg name="SAFETY_MODE_SIGN_IN_TO_ENABLE">ログインしてセーフティモードを有効にする<ph name="START_BR">&lt;br&gt;</ph>有効化後、不適切な可能性のある動画は表示されなくなります。</msg>
+    <msg name="SEARCHING_PROCESS">検索中:</msg>
+    <msg name="SIGN_IN_AND_SETTINGS">ログインと設定</msg>
+    <msg name="SIGN_IN_CHANNEL">ログイン</msg>
+    <msg name="SIGN_IN_INSTRUCTIONS_1">テレビでYouTubeにアクセスするには...</msg>
+    <msg name="SIGN_IN_INSTRUCTIONS_2">以下にアクセスしてください<ph name="START_BR">&lt;br&gt;</ph><ph name="START_PART_1">&lt;font color="#FFFFFF"&gt;</ph><ph name="OAUTH_URL"><ex>youtube.com/activate</ex>%1</ph><ph name="END_PART">&lt;/font&gt;</ph><ph name="START_BR">&lt;br&gt;</ph>コードを入力してください:<ph name="START_PART_3">&lt;font color="#9A0B0B" size="30"&gt;</ph><ph name="CODE"><ex>abc123edf</ex>%1</ph><ph name="END_PART">&lt;/font&gt;</ph></msg>
+    <msg name="SIGN_IN_INSTRUCTIONS_3">残りは自動で処理され、画面にて確認できます。</msg>
+    <msg name="SIGN_OUT_CHANNEL">ログアウト</msg>
+    <msg name="SUBSCRIPTIONS_CHANNEL">チャンネル登録</msg>
+    <msg name="UPLOADS_CHANNEL">アップロード</msg>
+    <msg name="USER_PLAYLISTS_TITLE">再生リスト</msg>
+    <msg name="VIDEO_DURATION_AND_VIEWS"><ph name="DURATION"><ex>3:15</ex>%1</ph> | <ph name="VIEWS"><ex>432,345</ex>%1</ph></msg>
+    <msg name="FLAG_VIDEO">この動画を報告</msg>
+    <msg name="FLAG_WEB">この動画を報告するには</msg>
+    <msg name="FLAG_WEB_DESC">コンピューターで動画を開き、旗アイコンをクリックして報告してください:</msg>
+    <msg name="IMPROVE_YOUTUBE_TITLE">YouTubeを改善</msg>
+    <msg name="IMPROVE_YOUTUBE_ENABLE">匿名データを送信してYouTubeの改善に協力する</msg>
+    <msg name="CHECK_SETTINGS">設定を確認</msg>
+    <msg name="RETRY">再試行</msg>
+    <msg name="PAIR_MENU_TITLE">デバイスをペアリング</msg>
+    <msg name="PAIR_MENU_SUBTITLE">画面をモバイルデバイスと同期</msg>
+    <msg name="PAIR_CLEAR_DEVICES">ペアリング済みデバイスを削除</msg>
+    <msg name="PAIR_NO_DEVICES">現在接続されているデバイスはありません。</msg>
+    <msg name="PAIR_DEVICES">接続済みデバイス:</msg>
+    <msg name="PAIR_DEVICE">デバイスをペアリング</msg>
+    <msg name="OPENSSL_ATTRIBUTION">この製品にはOpenSSLプロジェクトで開発されたソフトウェアが含まれています: <ph name="OPENSSL_URL">www.openssl.org</ph></msg>
+    <msg name="WHAT_TO_WATCH">おすすめ動画</msg>
+    <msg name="WATCH_LATER">後で見る</msg>
+    <msg name="WATCH_HISTORY">視聴履歴</msg>
+    <msg name="UPGRADE_TITLE">YouTubeアプリの新しいバージョンがあります。</msg>
+    <msg name="UPGRADE_REASON_1">より速く、信頼性が高く、スマホをリモコンとして使用できます。</msg>
+    <msg name="UPGRADE_REASON_2">このアップデートで動画再生のパフォーマンスと信頼性が向上します。</msg>
+    <msg name="UPGRADE_INSTRUCTIONS">ダウンロードするには、Wiiショップチャンネルから「Wiiチャンネル」を選択してください。</msg>
+    <msg name="UPGRADE_DOWNLOAD">Wiiショップからダウンロード</msg>
+    <msg name="UPGRADE_LATER">後で</msg>
+    <msg name="UPGRADE_DOWNLOAD_LATER">後でダウンロード</msg>
+    <msg name="WATCH_LATER_EMPTY">「後で見る」リストは現在空です。</msg>
+    <msg name="WATCH_LATER_INSTRUCTIONS">youtube.comで見つけた動画を保存し、後でWiiで見ることができます。「後で見る」ボタンをクリックしてリストに追加してください。</msg>
+    <msg name="REPORT">問題を報告</msg>
+    <msg name="REPORT_SUCCESS">問題の報告が正常に送信されました。</msg>
+  </messages>
+</localizationbundle>

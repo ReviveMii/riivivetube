@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<localizationbundle>
+  <messages>
+    <msg name="AD_TIMING">Advertentie (&lt;ph name="AD_TIMING_MIN"&gt;&lt;ex&gt;0:15&lt;/ex&gt;%1&lt;/ph&gt;)</msg>
+    <msg name="AD_SKIP_IN">Overslaan over &lt;ph name="CAN_SKIP_IN"&gt;&lt;ex&gt;5&lt;/ex&gt;%1&lt;/ph&gt;s</msg>
+    <msg name="AD_SKIPPABLE">Deze advertentie kan worden overgeslagen</msg>
+    <msg name="AD">Advertentie</msg>
+    <msg name="CANCEL_BTN">ANNULEREN</msg>
+    <msg name="VIDEO_WILL_PLAY_IN">Je video start over &lt;ph name="AD_TIME_LEFT"&gt;&lt;ex&gt;0:15&lt;/ex&gt;%1&lt;/ph&gt;s</msg>
+    <msg name="ERROR_VIDEO_PLAYBACK">Deze video is niet beschikbaar.</msg>
+    <msg name="ERROR_AUTOPLAY_MESSAGE">De volgende video start over &lt;ph name="DIALOG_TIMEOUT"&gt;&lt;ex&gt;5&lt;/ex&gt;%1&lt;/ph&gt; seconden...</msg>
+    <msg name="ERROR_MESSAGE_TIMEOUT">Dit bericht verdwijnt over &lt;ph name="DIALOG_TIMEOUT"&gt;&lt;ex&gt;5&lt;/ex&gt;%1&lt;/ph&gt; seconden.</msg>
+    <msg name="FAVORITES_CHANNEL">Favorieten</msg>
+    <msg name="HELP_AND_TERMS">Help en Voorwaarden</msg>
+    <msg name="HELP_CONTENT">Voor de Servicevoorwaarden en ons Privacybeleid, bezoek de computer: &lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;&lt;ph name="START_LINK_TERMS"&gt;http://www.youtube.com/t/terms&lt;/ph&gt;&lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;&lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;Voor klantenservice bezoek de computer: &lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;&lt;ph name="START_LINK_SUPPORT"&gt;http://www.youtube.com/console_support&lt;/ph&gt;</msg>
+    <msg name="LOADING">Laden...</msg>
+    <msg name="META_VIEWS">WEERGAVEN</msg>
+    <msg name="MY_YOUTUBE_CHANNELS">Mijn YouTube</msg>
+    <msg name="NO_RESULTS">Geen resultaten</msg>
+    <msg name="TUMBLER_OFF">Uit</msg>
+    <msg name="TUMBLER_ON">Aan</msg>
+    <msg name="SAFETY_MODE">Veilige modus</msg>
+    <msg name="SAFETY_MODE_ALL_USERS_2">Inschakelen voor alle gebruikers op deze Wii</msg>
+    <msg name="SAFETY_MODE_DESCRIPTION">Schakel de veilige modus in om video's met mogelijk ongepaste inhoud te vermijden. Veilige modus gebruikt communitymeldingen en andere signalen om ongepaste video's te filteren. Het garandeert niet dat alle ongepaste inhoud wordt geblokkeerd.</msg>
+    <msg name="SAFETY_MODE_ENABLED_BY_2">Veilige modus is ingeschakeld door &lt;ph name="USERNAME"&gt;&lt;ex&gt;Admin&lt;/ex&gt;%1&lt;/ph&gt;. Veilige modus blokkeert ongepaste inhoud op deze Wii.&lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;Log in als &lt;ph name="USERNAME"&gt;&lt;ex&gt;Admin&lt;/ex&gt;%1&lt;/ph&gt; om veilige modus uit te schakelen.</msg>
+    <msg name="SAFETY_MODE_MY_ACCOUNT">Inschakelen voor mijn account</msg>
+    <msg name="SAFETY_MODE_OFF">Uitgeschakeld</msg>
+    <msg name="SAFETY_MODE_OPTIONS">Veilige modus opties</msg>
+    <msg name="SAFETY_MODE_SIGN_IN_TO_ENABLE">&lt;ph name="START_PART_1"&gt;&amp;lt;font size="30"&amp;gt;&lt;/ph&gt;Log in om veilige modus in te schakelen&lt;ph name="END_PART"&gt;&amp;lt;/font&amp;gt;&lt;/ph&gt;&lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;Na activering worden video's met mogelijk ongepaste inhoud verborgen.</msg>
+    <msg name="SEARCHING_PROCESS">Zoeken naar:</msg>
+    <msg name="SIGN_IN_AND_SETTINGS">Inloggen en instellingen</msg>
+    <msg name="SIGN_IN_CHANNEL">Inloggen</msg>
+    <msg name="SIGN_IN_INSTRUCTIONS_1">Om YouTube op je tv te gebruiken...</msg>
+    <msg name="SIGN_IN_INSTRUCTIONS_2">Ga naar &lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;&lt;ph name="START_PART_1"&gt;&amp;lt;font color="#FFFFFF"&amp;gt;&lt;/ph&gt;&lt;ph name="OAUTH_URL"&gt;&lt;ex&gt;youtube.com/activate&lt;/ex&gt;%1&lt;/ph&gt;&lt;ph name="END_PART"&gt;&amp;lt;/font&amp;gt;&lt;/ph&gt;&lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;Voer de code in: &lt;ph name="START_PART_3"&gt;&amp;lt;font color="#9A0B0B" size="30"&amp;gt;&lt;/ph&gt;&lt;ph name="CODE"&gt;&lt;ex&gt;abc123edf&lt;/ex&gt;%1&lt;/ph&gt;&lt;ph name="END_PART"&gt;&amp;lt;/font&amp;gt;&lt;/ph&gt;</msg>
+    <msg name="SIGN_IN_INSTRUCTIONS_3">Wij regelen de rest en bevestigen dit snel op het scherm.</msg>
+    <msg name="SIGN_OUT_CHANNEL">Uitloggen</msg>
+    <msg name="SUBSCRIPTIONS_CHANNEL">Abonnementen</msg>
+    <msg name="UPLOADS_CHANNEL">Uploads</msg>
+    <msg name="USER_PLAYLISTS_TITLE">Afspeellijsten</msg>
+    <msg name="VIDEO_DURATION_AND_VIEWS">&lt;ph name="DURATION"&gt;&lt;ex&gt;3:15&lt;/ex&gt;%1&lt;/ph&gt; | &lt;ph name="VIEWS"&gt;&lt;ex&gt;432.345&lt;/ex&gt;%1&lt;/ph&gt;</msg>
+    <msg name="FLAG_VIDEO">Deze video melden</msg>
+    <msg name="FLAG_WEB">Deze video melden</msg>
+    <msg name="FLAG_WEB_DESC">Bezoek deze video op een computer en klik op het vlag-icoon om te melden:</msg>
+    <msg name="IMPROVE_YOUTUBE_TITLE">Verbeter YouTube</msg>
+    <msg name="IMPROVE_YOUTUBE_ENABLE">Help YouTube verbeteren door anonieme gebruiksgegevens te verzenden</msg>
+    <msg name="CHECK_SETTINGS">Controleer instellingen</msg>
+    <msg name="RETRY">Opnieuw proberen</msg>
+    <msg name="PAIR_MENU_TITLE">Apparaat koppelen</msg>
+    <msg name="PAIR_MENU_SUBTITLE">Synchroniseer het scherm met een mobiel apparaat.</msg>
+    <msg name="PAIR_CLEAR_DEVICES">Verwijder gekoppelde apparaten</msg>
+    <msg name="PAIR_NO_DEVICES">Geen verbonden apparaten op dit moment.</msg>
+    <msg name="PAIR_DEVICES">Verbonden apparaten:</msg>
+    <msg name="PAIR_DEVICE">KOPPEL APPARAAT</msg>
+    <msg name="OPENSSL_ATTRIBUTION">Dit product bevat software ontwikkeld door het OpenSSL-project, gebruikt in OpenSSL-tools: &lt;ph name="OPENSSL_URL"&gt;www.openssl.org&lt;/ph&gt;</msg>
+    <msg name="WHAT_TO_WATCH">Wat te bekijken</msg>
+    <msg name="WATCH_LATER">Later bekijken</msg>
+    <msg name="WATCH_HISTORY">Bekijkgeschiedenis</msg>
+    <msg name="UPGRADE_TITLE">Een nieuwe versie van de YouTube-app is beschikbaar.</msg>
+    <msg name="UPGRADE_REASON_1">Het is sneller, betrouwbaarder en stelt je in staat je smartphone als afstandsbediening te gebruiken.</msg>
+    <msg name="UPGRADE_REASON_2">Deze update verbetert de prestaties en betrouwbaarheid van videoweergave.</msg>
+    <msg name="UPGRADE_INSTRUCTIONS">Om te downloaden: ga naar de Wii Shop-kanaal en selecteer Wii-kanalen.</msg>
+    <msg name="UPGRADE_DOWNLOAD">Download vanuit de Wii Shop</msg>
+    <msg name="UPGRADE_LATER">Later</msg>
+    <msg name="UPGRADE_DOWNLOAD_LATER">Later downloaden</msg>
+    <msg name="WATCH_LATER_EMPTY">Je "Later bekijken"-lijst is momenteel leeg.</msg>
+    <msg name="WATCH_LATER_INSTRUCTIONS">Sla video's op van youtube.com en bekijk ze later op je Wii. Klik op "Later bekijken" om video's aan deze lijst toe te voegen.</msg>
+    <msg name="REPORT">Probleem melden.</msg>
+    <msg name="REPORT_SUCCESS">Je probleemrapport is succesvol verzonden.</msg>
+  </messages>
+</localizationbundle>
