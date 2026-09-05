@@ -35,6 +35,7 @@ import string
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from werkzeug.middleware.proxy_fix import ProxyFix
+from pathlib import Path
 
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1)
@@ -479,13 +480,24 @@ def _run_transcode_job(video_id, flv_path, job):
     tmp_path = job["tmp_path"]
     downloaded_path = f"/tmp/{video_id}_src.mp4"
     try:
-        ytdlp_cmd = [
-            'yt-dlp',
-            f'https://www.youtube.com/watch?v={video_id}',
-            '-f', '18',
-            '--cookies', 'cookies.txt',
-            '-o', downloaded_path
-        ]
+        if Path("cookies.txt").exists():
+            ytdlp_cmd = [
+                'yt-dlp',
+                f'https://www.youtube.com/watch?v={video_id}',
+                '-f', '18',
+                '--extractor-args', 'youtube:player_client=web',
+                '--cookies', 'cookies.txt',
+                '-o', downloaded_path
+            ]
+        else:
+            ytdlp_cmd = [
+                'yt-dlp',
+                f'https://www.youtube.com/watch?v={video_id}',
+                '-f', '18',
+                '--extractor-args', 'youtube:player_client=android',
+                '-o', downloaded_path
+            ]
+
         result = subprocess.run(ytdlp_cmd, capture_output=True, text=True)
         if result.returncode != 0:
             error_msg = f"yt-dlp error: {result.stderr}"
