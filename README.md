@@ -18,13 +18,12 @@ Use the [Patcher](https://github.com/ReviveMii/ReviveMiiPatcher) to patch your W
 If you want to avoid YouTube blocking your IP, use a [cookies.txt file](https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp)
 
 ## Working Features
-- Search and play videos
+- Search and play videos (360p)
 - Music, Gaming, Sports and News
 - Search Suggestions in Search
 - Sign-in (partially working)
 
 ## TODO
-- Higher video quality (360p)
 - Fix 0 views on watch_later and watch_history (Signed-In)
 - Implement subscriptions, etc (Signed-In)
 - Implement Pairing/Lounge API Proxy

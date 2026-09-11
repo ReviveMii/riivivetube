@@ -444,7 +444,7 @@ def build_river_xml_tv(json_data):
         if not f["video_id"]:
             continue
         inner = '<entry>'
-        inner += f'<id>http://ytv2.nossl.revivemii.xyz/api/videos/{f["video_id"]}</id>'
+        inner += f'<id>http://192.168.100.2:5005/api/videos/{f["video_id"]}</id>'
         inner += f'<published>{f["published"]}</published>'
         inner += f'<updated>{f["published"]}</updated>'
         inner += f'<title type="text">{escape_xml(f["title"])}</title>'
@@ -460,7 +460,7 @@ def build_river_xml_tv(json_data):
         inner += f'<yt:statistics favoriteCount="0" viewCount="{f["view_count"]}"/>'
         inner += '</entry>'
         xml_string += '<entry>'
-        xml_string += f'<id>http://ytv2.nossl.revivemii.xyz/api/videos/{f["video_id"]}</id>'
+        xml_string += f'<id>http://192.168.100.2:5005/api/videos/{f["video_id"]}</id>'
         xml_string += f'<published>{f["published"]}</published>'
         xml_string += f'<title type="text">{escape_xml(f["title"])}</title>'
         xml_string += '<link>'
@@ -510,7 +510,7 @@ def build_user_info_xml(account_item):
 
     thumbnails = account_item.get("accountPhoto", {}).get("thumbnails", [])
     old_avatar_url = thumbnails[-1].get("url", "") if thumbnails else ""
-    avatar_url = "http://ytv2.nossl.revivemii.xyz//pfpproxy/" + old_avatar_url
+    avatar_url = "http://192.168.100.2:5005//pfpproxy/" + old_avatar_url
     user_id = ""
     try:
         tokens = account_item["serviceEndpoint"]["selectActiveIdentityEndpoint"]["supportedTokens"]
@@ -614,7 +614,7 @@ def build_watch_history_xml(json_data):
                     is_hd = True
 
         xml_string += '<entry>'
-        xml_string += f'<id>http://ytv2.nossl.revivemii.xyz/api/videos/{f["video_id"]}</id>'
+        xml_string += f'<id>http://192.168.100.2:5005/api/videos/{f["video_id"]}</id>'
         xml_string += f'<published>{f["published"]}</published>'
         xml_string += f'<title type="text">{escape_xml(f["title"])}</title>'
         xml_string += f'<author><name>{escape_xml(f["author_name"])}</name><uri>https://www.youtube.com/channel/{f["author_id"]}</uri></author>'
@@ -906,7 +906,7 @@ def build_watch_later_xml(json_data):
         if not f["video_id"]:
             continue
         xml_string += '<entry>'
-        xml_string += f'<id>http://ytv2.nossl.revivemii.xyz/api/videos/{f["video_id"]}</id>'
+        xml_string += f'<id>http://192.168.100.2:5005/api/videos/{f["video_id"]}</id>'
         xml_string += f'<published>{f["published"]}</published>'
         xml_string += f'<title type="text">{escape_xml(f["title"])}</title>'
         xml_string += f'<author><name>{escape_xml(f["author_name"])}</name><uri>https://www.youtube.com/channel/{f["author_id"]}</uri></author>'
@@ -981,7 +981,7 @@ def build_favorites_xml(json_data):
         if not f["video_id"]:
             continue
         xml_string += '<entry>'
-        xml_string += f'<id>http://ytv2.nossl.revivemii.xyz/api/videos/{f["video_id"]}</id>'
+        xml_string += f'<id>http://192.168.100.2:5005/api/videos/{f["video_id"]}</id>'
         xml_string += f'<published>{f["published"]}</published>'
         xml_string += f'<title type="text">{escape_xml(f["title"])}</title>'
         xml_string += f'<author><name>{escape_xml(f["author_name"])}</name><uri>https://www.youtube.com/channel/{f["author_id"]}</uri></author>'

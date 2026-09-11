@@ -62,7 +62,18 @@ FLV_FOLDER = "./flvcache"
 MESSAGES_FOLDER = "./assets/messages"
 _transcode_jobs_guard = threading.Lock()
 _transcode_jobs = {}
-TARGET_BITRATE_BPS = 500_000 + 96_000
+
+# 360p output quality settings (flv1 video and MP3 audio)
+VIDEO_HEIGHT = 360
+VIDEO_BITRATE = "800k"
+VIDEO_BITRATE_BPS = 800_000
+AUDIO_BITRATE = "128k"
+AUDIO_BITRATE_BPS = 128_000
+
+VIDEO_FMT_ID = "34" # legacy yt fmt code for flv 360p
+VIDEO_FMT_RESOLUTION = "640x360"
+CACHE_QUALITY_VERSION = "360p-v1"
+TARGET_BITRATE_BPS = VIDEO_BITRATE_BPS + AUDIO_BITRATE_BPS
 SIZE_ESTIMATE_MARGIN = 1.30
 SIZE_ESTIMATE_OVERHEAD = 200_000
 subtitle_cache = {}
@@ -70,6 +81,38 @@ subtitle_cache = {}
 if not os.path.exists(FLV_FOLDER):
     os.makedirs(FLV_FOLDER)
 
+def _ensure_cache_quality_version():
+    """
+    Clear stale cached FLVs when the output quality changes.
+
+    Old 240p files share the same {video_id}.flv name, so without
+    this they would keep being served forever after the 360p update.
+    """
+
+    marker = os.path.join(FLV_FOLDER, ".quality_version")
+
+    try:
+        with open(marker, "r", encoding="utf-8") as f:
+            current = f.read().strip()
+    except Exception:
+        current = ""
+    
+    if current == CACHE_QUALITY_VERSION:
+        return
+    try:
+        for name in os.listdir(FLV_FOLDER):
+            if name.endswith(".flv") or name.endswith(".flv.part"):
+                try:
+                    os.remove(os.path.join(FLV_FOLDER, name))
+                except Exception:
+                    pass
+        with open(marker, "w", encoding="utf-8") as f:
+            f.write(CACHE_QUALITY_VERSION)
+        print(f"[flvcache] cleared stale cache, quality now {CACHE_QUALITY_VERSION}")
+    except Exception as e:
+        print(f"[flvcache] error clearing stale cache: {e}")
+
+_ensure_cache_quality_version()
 
 def get_first_video_id_from_route(category):
     try:
@@ -123,9 +166,9 @@ class GetVideoInfo:
         title = info.get('title', '')
         author = info.get('author', '')
 
-        fmtList = "43/854x480/9/0/115"
-        fmtStreamMap = f"43|"
-        fmtMap = "43/0/7/0/0"
+        fmtList = f"{VIDEO_FMT_ID}/{VIDEO_FMT_RESOLUTION}/9/0/115"
+        fmtStreamMap = f"{VIDEO_FMT_ID}|"
+        fmtMap = f"{VIDEO_FMT_ID}/0/7/0/0"
         thumbnailUrl = f"http://i.ytimg.com/vi/{videoId}/mqdefault.jpg"
 
         response_str = (
@@ -150,9 +193,9 @@ class GetVideoInfo:
             f"videoId={videoId}&"
             f"fmtList={fmtList}&"
             f"fmtStreamMap={fmtStreamMap}&"
-            f"cc_module=http://ytv2.nossl.revivemii.xyz/assets/subtitle_module.swf&"
+            f"cc_module=http://192.168.100.2:5005/assets/subtitle_module.swf&"
             f"cc_load_policy=3&" # set to 1 to force subtitles if you want subtitles. currently disabled because you cant disable the subtitles, will be fixed someday
-            f"{quote('http://ytv2.nossl.revivemii.xyz/timedtext?', safe='')}"
+            f"{quote('http://192.168.100.2:5005/timedtext?', safe='')}"
         )
         return Response(response_str, content_type='text/plain')
 
@@ -303,7 +346,7 @@ def video_details(video_id):
         }
 
         root = ET.Element('entry')
-        ET.SubElement(root, 'id').text = f"http://ytv2.nossl.revivemii.xyz/feeds/api/videos/{video_id}"
+        ET.SubElement(root, 'id').text = f"http://192.168.100.2:5005/feeds/api/videos/{video_id}"
         ET.SubElement(root, 'title').text = video_info.get('title', '')
         ET.SubElement(root, 'published').text = video_info.get('publishedText', '')
         author = ET.SubElement(root, 'author')
@@ -382,19 +425,19 @@ def wiitv():
     if get_flashvars:
         flashvars = {
             "enabled_features": "captions",
-            "gdata_url": "http://ytv2.nossl.revivemii.xyz",
+            "gdata_url": "http://192.168.100.2:5005",
             "country": request.args.get("country") or "US",
             "vendor": vendor or "NINTENDO",
             "model": model or "wii",
             "cc_load_policy": "3",
             "captions": "1",
-            "base_url": "http://ytv2.nossl.revivemii.xyz",
+            "base_url": "http://192.168.100.2:5005",
             "ps": "lbl",
             "el": "leanback",
             "ea": "1",
             "upgrade_notify": "",
             "upgrade_forced": "",
-            "upgrade_bg": "http://ytv2.nossl.revivemii.xyz/upgrade_bg"
+            "upgrade_bg": "http://192.168.100.2:5005/upgrade_bg"
         }
         return Response(urlencode(flashvars), status=200, headers={"Content-Type": "application/x-www-form-urlencoded"})
     return send_from_directory("assets", "leanbacklite_wii.swf", mimetype='application/x-shockwave-flash')
@@ -480,11 +523,14 @@ def _run_transcode_job(video_id, flv_path, job):
     tmp_path = job["tmp_path"]
     downloaded_path = f"/tmp/{video_id}_src.mp4"
     try:
+        # best <=360p source (merged when needed) so the 360p flv keeps full resolution instead of upscaling a lower-res stream
+        ytdlp_format = "bv*[height<=360]+ba/b[height<=360]/18/b"
         if Path("cookies.txt").exists():
             ytdlp_cmd = [
                 'yt-dlp',
                 f'https://www.youtube.com/watch?v={video_id}',
-                '-f', '18',
+                '-f', ytdlp_format,
+                '--merge-output-format', 'mp4',
                 '--extractor-args', 'youtube:player_client=web',
                 '--cookies', 'cookies.txt',
                 '-o', downloaded_path
@@ -493,7 +539,8 @@ def _run_transcode_job(video_id, flv_path, job):
             ytdlp_cmd = [
                 'yt-dlp',
                 f'https://www.youtube.com/watch?v={video_id}',
-                '-f', '18',
+                '-f', ytdlp_format,
+                '--merge-output-format', 'mp4',
                 '--extractor-args', 'youtube:player_client=android',
                 '-o', downloaded_path
             ]
@@ -906,12 +953,12 @@ class Invidious:
 
         for item in json_data:
             xml_string += '<entry>'
-            xml_string += '<id>http://ytv2.nossl.revivemii.xyz/api/videos/' + self.escape_xml(item["videoId"]) + '</id>'
+            xml_string += '<id>http://192.168.100.2:5005/api/videos/' + self.escape_xml(item["videoId"]) + '</id>'
             xml_string += '<published>' + self.escape_xml(item.get("publishedText", "")) + '</published>'
             xml_string += '<title type="text">' + self.escape_xml(item.get("title", "")) + '</title>'
-            xml_string += '<link rel="http://ytv2.nossl.revivemii.xyz/api/videos/' + self.escape_xml(item["videoId"]) + '/related"/>'
+            xml_string += '<link rel="http://192.168.100.2:5005/api/videos/' + self.escape_xml(item["videoId"]) + '/related"/>'
             xml_string += '<author><name>' + self.escape_xml(item.get("author", "")) + '</name>'
-            xml_string += '<uri>http://ytv2.nossl.revivemii.xyz/api/channels/' + self.escape_xml(item.get("authorId", "")) + '</uri></author>'
+            xml_string += '<uri>http://192.168.100.2:5005/api/channels/' + self.escape_xml(item.get("authorId", "")) + '</uri></author>'
             xml_string += '<media:group>'
             xml_string += '<media:thumbnail yt:name="hqdefault" url="http://i.ytimg.com/vi/' + self.escape_xml(item["videoId"]) + '/hqdefault.jpg" height="240" width="320" time="00:00:00"/>'
             xml_string += '<yt:duration seconds="' + self.escape_xml(str(item.get("lengthSeconds", 0))) + '"/>'
