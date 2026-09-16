@@ -46,15 +46,25 @@ limiter = Limiter(
     storage_uri="memory://",
 )
 executor = ThreadPoolExecutor(max_workers=10)
+
 CATEGORIES = {
-"feeds/api/users/trends/favorites", "feeds/api/standardfeeds/US/most_popular_Music", "feeds/api/standardfeeds/US/most_popular_Games", "feeds/api/standardfeeds/US/most_popular_Sports", "feeds/api/standardfeeds/US/most_popular_News" }
+    "feeds/api/users/trends/favorites", "feeds/api/standardfeeds/US/most_popular_Music", "feeds/api/standardfeeds/US/most_popular_Games", "feeds/api/standardfeeds/US/most_popular_Sports", "feeds/api/standardfeeds/US/most_popular_FilmAnimation", "feeds/api/standardfeeds/US/most_popular_Entertainment", "feeds/api/standardfeeds/US/most_popular_Comedy", "feeds/api/standardfeeds/US/most_popular_NewsPolitics", "feeds/api/standardfeeds/US/most_popular_PeopleBlogs", "feeds/api/standardfeeds/US/most_popular_ScienceTech", "feeds/api/standardfeeds/US/most_popular_HowtoStyle", "feeds/api/standardfeeds/US/most_popular_Education", "feeds/api/standardfeeds/US/most_popular_PetsAnimals",
+}
 
 CATEGORY_MAP = {
     "feeds/api/users/trends/favorites": "trending",
     "feeds/api/standardfeeds/US/most_popular_Music": "music",
     "feeds/api/standardfeeds/US/most_popular_Games": "gaming",
     "feeds/api/standardfeeds/US/most_popular_Sports": "sports",
-    "feeds/api/standardfeeds/US/most_popular_News": "news"
+    "feeds/api/standardfeeds/US/most_popular_FilmAnimation": "film_animation",
+    "feeds/api/standardfeeds/US/most_popular_Entertainment": "entertainment",
+    "feeds/api/standardfeeds/US/most_popular_Comedy": "comedy",
+    "feeds/api/standardfeeds/US/most_popular_NewsPolitics": "news_politics",
+    "feeds/api/standardfeeds/US/most_popular_PeopleBlogs": "people_blogs",
+    "feeds/api/standardfeeds/US/most_popular_ScienceTech": "science_technology",
+    "feeds/api/standardfeeds/US/most_popular_HowtoStyle": "howto_style",
+    "feeds/api/standardfeeds/US/most_popular_Education": "education",
+    "feeds/api/standardfeeds/US/most_popular_PetsAnimals": "pets_animals",
 }
 
 thumbnail_url_cache = {}
@@ -521,57 +531,47 @@ def _run_transcode_job(video_id, flv_path, job):
             bytes_per_second = TARGET_BITRATE_BPS / 8
             total_size = int(bytes_per_second * duration * SIZE_ESTIMATE_MARGIN) + SIZE_ESTIMATE_OVERHEAD
             with open(tmp_path, 'wb') as f:
-                f.truncate(total_size)
+                pass 
             job["total_size"] = total_size
             job["ready"].set()
 
         ffmpeg_cmd = [
-            'ffmpeg', '-y', '-i', downloaded_path,
-            '-c:v', 'flv1', '-b:v', '500k', '-vf', 'scale=-1:240',
-            '-c:a', 'mp3', '-b:a', '96k',
-            '-r', '24', '-g', '24',
-            '-f', 'flv', 'pipe:1' if duration else tmp_path
+            'ffmpeg',
+            '-i', downloaded_path,
+            '-c:v', 'flv',
+            '-b:v', '500k',
+            '-c:a', 'libmp3lame',
+            '-b:a', '96k',
+            '-ar', '44100',
+            '-f', 'flv',
+            '-y',
+            tmp_path
         ]
 
-        if duration:
-            proc = subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            written = 0
-            with open(tmp_path, 'r+b', buffering=0) as out_f:
-                while True:
-                    chunk = proc.stdout.read(65536)
-                    if not chunk:
-                        break
-                    out_f.write(chunk)
-                    os.fsync(out_f.fileno())
-                    written += len(chunk)
-                    job["written"] = written
-            proc.wait()
-            if proc.returncode != 0:
-                stderr = proc.stderr.read().decode(errors='ignore')
-                raise RuntimeError(f"ffmpeg error: {stderr}")
-        else:
-            print("WARNING: no duration found, maybe youtube changed something???")
-            proc = subprocess.run(ffmpeg_cmd, capture_output=True)
-            if proc.returncode != 0 or not os.path.exists(tmp_path):
-                raise RuntimeError(f"ffmpeg error: {proc.stderr.decode(errors='ignore')}")
-            written = os.path.getsize(tmp_path)
+        process = subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-        # fixes somes crashes, DONT ASK WHY THIS WORKS
-        try:
-            corrupt_bytes = int((TARGET_BITRATE_BPS / 8) * 2)
-            corrupt_start = max(0, written - corrupt_bytes)
-            with open(tmp_path, 'r+b') as f:
-                f.seek(corrupt_start)
-                f.write(os.urandom(written - corrupt_start))
-        except Exception:
-            pass
+        while True:
+            if process.poll() is not None:
+                break
+            if os.path.exists(tmp_path):
+                job["written"] = os.path.getsize(tmp_path)
+            time.sleep(0.2)
 
-        os.replace(tmp_path, flv_path)
+        stdout, stderr = process.communicate()
+        if process.returncode != 0:
+            error_msg = f"ffmpeg error: {stderr.decode()}"
+            send_discord_error(video_id, error_msg)
+            raise RuntimeError(error_msg)
+
+        os.rename(tmp_path, flv_path)
+        job["done"].set()
+
     except Exception as e:
         job["error"].append(str(e))
-        job["ready"].set()
-    finally:
         job["done"].set()
+        job["ready"].set()
+        print(f"Transcode error for {video_id}: {e}")
+    finally:
         with _transcode_jobs_guard:
             _transcode_jobs.pop(video_id, None)
         try:
@@ -942,8 +942,32 @@ class Invidious:
     def sports(self, type_param=None):
         return self.search("sports")
 
-    def news(self, type_param=None):
+    def film_animation(self, type_param=None):
+        return self.search("film and animation")
+
+    def entertainment(self, type_param=None):
+        return self.search("entertainment")
+
+    def comedy(self, type_param=None):
+        return self.search("comedy")
+
+    def news_politics(self, type_param=None):
         return self.search("news")
+
+    def people_blogs(self, type_param=None):
+        return self.search("vlog")
+
+    def science_technology(self, type_param=None):
+        return self.search("science and technology")
+
+    def howto_style(self, type_param=None):
+        return self.search("how to and style")
+
+    def education(self, type_param=None):
+        return self.search("education")
+
+    def pets_animals(self, type_param=None):
+        return self.search("pets and animals")
 
     @staticmethod
     def escape_xml(s):
@@ -1052,20 +1076,77 @@ def trending_sports():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route('/feeds/api/standardfeeds/US/most_popular_News')
-def trending_news():
+@app.route('/feeds/api/standardfeeds/US/most_popular_FilmAnimation')
+def trending_film_animation():
     try:
-        return inv.news()
+        return inv.film_animation()
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/feeds/api/standardfeeds/US/most_popular_Entertainment')
+def trending_entertainment():
+    try:
+        return inv.entertainment()
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/feeds/api/standardfeeds/US/most_popular_Comedy')
+def trending_comedy():
+    try:
+        return inv.comedy()
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/feeds/api/standardfeeds/US/most_popular_NewsPolitics')
+def trending_news_politics():
+    try:
+        return inv.news_politics()
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/feeds/api/standardfeeds/US/most_popular_PeopleBlogs')
+def trending_people_blogs():
+    try:
+        return inv.people_blogs()
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/feeds/api/standardfeeds/US/most_popular_ScienceTech')
+def trending_science_technology():
+    try:
+        return inv.science_technology()
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/feeds/api/standardfeeds/US/most_popular_HowtoStyle')
+def trending_howto_style():
+    try:
+        return inv.howto_style()
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/feeds/api/standardfeeds/US/most_popular_Education')
+def trending_education():
+    try:
+        return inv.education()
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/feeds/api/standardfeeds/US/most_popular_PetsAnimals')
+def trending_pets_animals():
+    try:
+        return inv.pets_animals()
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 @app.route('/dl/<category>.jpg')
 def serve_thumbnail(category):
-    allowed = {"trending", "music", "gaming", "sports", "news"}
+    allowed = set(CATEGORY_MAP.values())
     if category not in allowed:
         abort(404)
 
     url = thumbnail_url_cache.get(category)
+
     if not url:
         for cat, name in CATEGORY_MAP.items():
             if name == category:
@@ -1078,7 +1159,22 @@ def serve_thumbnail(category):
     if not url:
         abort(404)
 
-    return redirect(url, code=302)
+    try:
+        r = requests.get(url, timeout=5)
+        if r.status_code == 200:
+            return Response(
+                r.content,
+                mimetype=r.headers.get('Content-Type', 'image/jpeg'),
+                headers={
+                    'Cache-Control': 'public, max-age=86400, immutable',
+                    'Expires': 'Thu, 31 Dec 2037 23:55:55 GMT',
+                    'Pragma': 'cache'
+                }
+            )
+    except Exception as e:
+        print(f"[thumbnail] failed to fetch {url}: {e}")
+
+    abort(404)
 
 @app.route("/cookies.txt")
 def cookiestxt():
