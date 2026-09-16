@@ -46,7 +46,6 @@ limiter = Limiter(
     storage_uri="memory://",
 )
 executor = ThreadPoolExecutor(max_workers=10)
-
 CATEGORIES = {
     "feeds/api/users/trends/favorites", "feeds/api/standardfeeds/US/most_popular_Music", "feeds/api/standardfeeds/US/most_popular_Games", "feeds/api/standardfeeds/US/most_popular_Sports", "feeds/api/standardfeeds/US/most_popular_FilmAnimation", "feeds/api/standardfeeds/US/most_popular_Entertainment", "feeds/api/standardfeeds/US/most_popular_Comedy", "feeds/api/standardfeeds/US/most_popular_NewsPolitics", "feeds/api/standardfeeds/US/most_popular_PeopleBlogs", "feeds/api/standardfeeds/US/most_popular_ScienceTech", "feeds/api/standardfeeds/US/most_popular_HowtoStyle", "feeds/api/standardfeeds/US/most_popular_Education", "feeds/api/standardfeeds/US/most_popular_PetsAnimals",
 }
@@ -531,47 +530,57 @@ def _run_transcode_job(video_id, flv_path, job):
             bytes_per_second = TARGET_BITRATE_BPS / 8
             total_size = int(bytes_per_second * duration * SIZE_ESTIMATE_MARGIN) + SIZE_ESTIMATE_OVERHEAD
             with open(tmp_path, 'wb') as f:
-                pass 
+                f.truncate(total_size)
             job["total_size"] = total_size
             job["ready"].set()
 
         ffmpeg_cmd = [
-            'ffmpeg',
-            '-i', downloaded_path,
-            '-c:v', 'flv',
-            '-b:v', '500k',
-            '-c:a', 'libmp3lame',
-            '-b:a', '96k',
-            '-ar', '44100',
-            '-f', 'flv',
-            '-y',
-            tmp_path
+            'ffmpeg', '-y', '-i', downloaded_path,
+            '-c:v', 'flv1', '-b:v', '500k', '-vf', 'scale=-1:240',
+            '-c:a', 'mp3', '-b:a', '96k',
+            '-r', '24', '-g', '24',
+            '-f', 'flv', 'pipe:1' if duration else tmp_path
         ]
 
-        process = subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if duration:
+            proc = subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            written = 0
+            with open(tmp_path, 'r+b', buffering=0) as out_f:
+                while True:
+                    chunk = proc.stdout.read(65536)
+                    if not chunk:
+                        break
+                    out_f.write(chunk)
+                    os.fsync(out_f.fileno())
+                    written += len(chunk)
+                    job["written"] = written
+            proc.wait()
+            if proc.returncode != 0:
+                stderr = proc.stderr.read().decode(errors='ignore')
+                raise RuntimeError(f"ffmpeg error: {stderr}")
+        else:
+            print("WARNING: no duration found, maybe youtube changed something???")
+            proc = subprocess.run(ffmpeg_cmd, capture_output=True)
+            if proc.returncode != 0 or not os.path.exists(tmp_path):
+                raise RuntimeError(f"ffmpeg error: {proc.stderr.decode(errors='ignore')}")
+            written = os.path.getsize(tmp_path)
 
-        while True:
-            if process.poll() is not None:
-                break
-            if os.path.exists(tmp_path):
-                job["written"] = os.path.getsize(tmp_path)
-            time.sleep(0.2)
+        # fixes somes crashes, DONT ASK WHY THIS WORKS
+        try:
+            corrupt_bytes = int((TARGET_BITRATE_BPS / 8) * 2)
+            corrupt_start = max(0, written - corrupt_bytes)
+            with open(tmp_path, 'r+b') as f:
+                f.seek(corrupt_start)
+                f.write(os.urandom(written - corrupt_start))
+        except Exception:
+            pass
 
-        stdout, stderr = process.communicate()
-        if process.returncode != 0:
-            error_msg = f"ffmpeg error: {stderr.decode()}"
-            send_discord_error(video_id, error_msg)
-            raise RuntimeError(error_msg)
-
-        os.rename(tmp_path, flv_path)
-        job["done"].set()
-
+        os.replace(tmp_path, flv_path)
     except Exception as e:
         job["error"].append(str(e))
-        job["done"].set()
         job["ready"].set()
-        print(f"Transcode error for {video_id}: {e}")
     finally:
+        job["done"].set()
         with _transcode_jobs_guard:
             _transcode_jobs.pop(video_id, None)
         try:
@@ -1146,7 +1155,6 @@ def serve_thumbnail(category):
         abort(404)
 
     url = thumbnail_url_cache.get(category)
-
     if not url:
         for cat, name in CATEGORY_MAP.items():
             if name == category:
