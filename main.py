@@ -47,14 +47,23 @@ limiter = Limiter(
 )
 executor = ThreadPoolExecutor(max_workers=10)
 CATEGORIES = {
-"feeds/api/users/trends/favorites", "feeds/api/standardfeeds/US/most_popular_Music", "feeds/api/standardfeeds/US/most_popular_Games", "feeds/api/standardfeeds/US/most_popular_Sports", "feeds/api/standardfeeds/US/most_popular_News" }
+    "feeds/api/users/trends/favorites", "feeds/api/standardfeeds/US/most_popular_Music", "feeds/api/standardfeeds/US/most_popular_Games", "feeds/api/standardfeeds/US/most_popular_Sports", "feeds/api/standardfeeds/US/most_popular_FilmAnimation", "feeds/api/standardfeeds/US/most_popular_Entertainment", "feeds/api/standardfeeds/US/most_popular_Comedy", "feeds/api/standardfeeds/US/most_popular_NewsPolitics", "feeds/api/standardfeeds/US/most_popular_PeopleBlogs", "feeds/api/standardfeeds/US/most_popular_ScienceTech", "feeds/api/standardfeeds/US/most_popular_HowtoStyle", "feeds/api/standardfeeds/US/most_popular_Education", "feeds/api/standardfeeds/US/most_popular_PetsAnimals",
+}
 
 CATEGORY_MAP = {
     "feeds/api/users/trends/favorites": "trending",
     "feeds/api/standardfeeds/US/most_popular_Music": "music",
     "feeds/api/standardfeeds/US/most_popular_Games": "gaming",
     "feeds/api/standardfeeds/US/most_popular_Sports": "sports",
-    "feeds/api/standardfeeds/US/most_popular_News": "news"
+    "feeds/api/standardfeeds/US/most_popular_FilmAnimation": "film_animation",
+    "feeds/api/standardfeeds/US/most_popular_Entertainment": "entertainment",
+    "feeds/api/standardfeeds/US/most_popular_Comedy": "comedy",
+    "feeds/api/standardfeeds/US/most_popular_NewsPolitics": "news_politics",
+    "feeds/api/standardfeeds/US/most_popular_PeopleBlogs": "people_blogs",
+    "feeds/api/standardfeeds/US/most_popular_ScienceTech": "science_technology",
+    "feeds/api/standardfeeds/US/most_popular_HowtoStyle": "howto_style",
+    "feeds/api/standardfeeds/US/most_popular_Education": "education",
+    "feeds/api/standardfeeds/US/most_popular_PetsAnimals": "pets_animals",
 }
 
 thumbnail_url_cache = {}
@@ -942,8 +951,32 @@ class Invidious:
     def sports(self, type_param=None):
         return self.search("sports")
 
-    def news(self, type_param=None):
+    def film_animation(self, type_param=None):
+        return self.search("film and animation")
+
+    def entertainment(self, type_param=None):
+        return self.search("entertainment")
+
+    def comedy(self, type_param=None):
+        return self.search("comedy")
+
+    def news_politics(self, type_param=None):
         return self.search("news")
+
+    def people_blogs(self, type_param=None):
+        return self.search("vlog")
+
+    def science_technology(self, type_param=None):
+        return self.search("science and technology")
+
+    def howto_style(self, type_param=None):
+        return self.search("how to and style")
+
+    def education(self, type_param=None):
+        return self.search("education")
+
+    def pets_animals(self, type_param=None):
+        return self.search("pets and animals")
 
     @staticmethod
     def escape_xml(s):
@@ -1052,16 +1085,72 @@ def trending_sports():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route('/feeds/api/standardfeeds/US/most_popular_News')
-def trending_news():
+@app.route('/feeds/api/standardfeeds/US/most_popular_FilmAnimation')
+def trending_film_animation():
     try:
-        return inv.news()
+        return inv.film_animation()
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/feeds/api/standardfeeds/US/most_popular_Entertainment')
+def trending_entertainment():
+    try:
+        return inv.entertainment()
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/feeds/api/standardfeeds/US/most_popular_Comedy')
+def trending_comedy():
+    try:
+        return inv.comedy()
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/feeds/api/standardfeeds/US/most_popular_NewsPolitics')
+def trending_news_politics():
+    try:
+        return inv.news_politics()
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/feeds/api/standardfeeds/US/most_popular_PeopleBlogs')
+def trending_people_blogs():
+    try:
+        return inv.people_blogs()
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/feeds/api/standardfeeds/US/most_popular_ScienceTech')
+def trending_science_technology():
+    try:
+        return inv.science_technology()
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/feeds/api/standardfeeds/US/most_popular_HowtoStyle')
+def trending_howto_style():
+    try:
+        return inv.howto_style()
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/feeds/api/standardfeeds/US/most_popular_Education')
+def trending_education():
+    try:
+        return inv.education()
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/feeds/api/standardfeeds/US/most_popular_PetsAnimals')
+def trending_pets_animals():
+    try:
+        return inv.pets_animals()
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 @app.route('/dl/<category>.jpg')
 def serve_thumbnail(category):
-    allowed = {"trending", "music", "gaming", "sports", "news"}
+    allowed = set(CATEGORY_MAP.values())
     if category not in allowed:
         abort(404)
 
@@ -1078,7 +1167,22 @@ def serve_thumbnail(category):
     if not url:
         abort(404)
 
-    return redirect(url, code=302)
+    try:
+        r = requests.get(url, timeout=5)
+        if r.status_code == 200:
+            return Response(
+                r.content,
+                mimetype=r.headers.get('Content-Type', 'image/jpeg'),
+                headers={
+                    'Cache-Control': 'public, max-age=86400, immutable',
+                    'Expires': 'Thu, 31 Dec 2037 23:55:55 GMT',
+                    'Pragma': 'cache'
+                }
+            )
+    except Exception as e:
+        print(f"[thumbnail] failed to fetch {url}: {e}")
+
+    abort(404)
 
 @app.route("/cookies.txt")
 def cookiestxt():
