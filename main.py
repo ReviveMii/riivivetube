@@ -939,8 +939,7 @@ class Invidious:
         return Response(self.generateXML(results), mimetype='text/atom+xml')
 
     def trends(self, type_param=None):
-        results = youtubei.innertube_trending(type_param)
-        return Response(self.generateXML(results), mimetype='text/atom+xml')
+        return self.search("YouTube")
 
     def music(self, type_param=None):
         return self.search("music")

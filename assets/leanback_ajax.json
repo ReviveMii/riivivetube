@@ -1,6 +1,14 @@
 {
   "sets": [
     {
+      "title": "Most Popular",
+      "list_id": "popular",
+      "video_count": 25,
+      "thumbnail": "http://ytv2.nossl.revivemii.xyz/dl/trending.jpg",
+      "gdata_url": "http://ytv2.nossl.revivemii.xyz/feeds/api/users/trends/favorites",
+      "tab": "featured"
+    },
+    {
       "title": "Music",
       "list_id": "music",
       "video_count": 25,
@@ -95,6 +103,14 @@
       "thumbnail": "http://ytv2.nossl.revivemii.xyz/dl/pets_animals.jpg",
       "gdata_url": "http://ytv2.nossl.revivemii.xyz/feeds/api/standardfeeds/US/most_popular_PetsAnimals",
       "tab": "featured"
-    }
+    },
+    {
+      "title": "YouTube Trends",
+      "list_id": "trends",
+      "video_count": 25,
+      "thumbnail": "http://ytv2.nossl.revivemii.xyz/dl/trending.jpg",
+      "gdata_url": "http://ytv2.nossl.revivemii.xyz/feeds/api/users/trends/favorites",
+      "tab": "featured"
+    },
   ]
 }
