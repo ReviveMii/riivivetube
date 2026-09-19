@@ -1,46 +1,116 @@
 {
   "sets": [
     {
+      "title": "Most Popular",
+      "list_id": "popular",
+      "video_count": 25,
+      "thumbnail": "http://ytv2.nossl.revivemii.xyz/dl/trending.jpg",
+      "gdata_url": "http://ytv2.nossl.revivemii.xyz/feeds/api/users/trends/favorites",
+      "tab": "featured"
+    },
+    {
       "title": "Music",
       "list_id": "music",
       "video_count": 25,
-      "thumbnail": "http://192.168.100.2:5005/dl/music.jpg",
-      "gdata_list_id": "STmost_popular_Music",
-      "gdata_url": "http://192.168.100.2:5005/feeds/api/standardfeeds/US/most_popular_Music",
-      "icon": "music",
+      "thumbnail": "http://ytv2.nossl.revivemii.xyz/dl/music.jpg",
+      "gdata_url": "http://ytv2.nossl.revivemii.xyz/feeds/api/standardfeeds/US/most_popular_Music",
       "tab": "featured"
-
     },
     {
       "title": "Gaming",
       "list_id": "gaming",
       "video_count": 25,
-      "thumbnail": "http://192.168.100.2:5005/dl/gaming.jpg",
-      "gdata_list_id": "Gaming",
-      "gdata_url": "http://192.168.100.2:5005/feeds/api/standardfeeds/US/most_popular_Games",
-      "icon": "gaming",
+      "thumbnail": "http://ytv2.nossl.revivemii.xyz/dl/gaming.jpg",
+      "gdata_url": "http://ytv2.nossl.revivemii.xyz/feeds/api/standardfeeds/US/most_popular_Games",
       "tab": "featured"
-
     },
     {
       "title": "Sports",
       "list_id": "sports",
       "video_count": 25,
-      "thumbnail": "http://192.168.100.2:5005/dl/sports.jpg",
-      "gdata_list_id": "Sports",
-      "gdata_url": "http://192.168.100.2:5005/feeds/api/standardfeeds/US/most_popular_Sports",
-      "icon": "sports",
+      "thumbnail": "http://ytv2.nossl.revivemii.xyz/dl/sports.jpg",
+      "gdata_url": "http://ytv2.nossl.revivemii.xyz/feeds/api/standardfeeds/US/most_popular_Sports",
       "tab": "featured"
     },
     {
-      "title": "News",
-      "list_id": "news",
+      "title": "Film & Animation",
+      "list_id": "film_animation",
       "video_count": 25,
-      "thumbnail": "http://192.168.100.2:5005/dl/news.jpg",
-      "gdata_list_id": "News",
-      "gdata_url": "http://192.168.100.2:5005/feeds/api/standardfeeds/US/most_popular_News",
-      "icon": "news"
-
+      "thumbnail": "http://ytv2.nossl.revivemii.xyz/dl/film_animation.jpg",
+      "gdata_url": "http://ytv2.nossl.revivemii.xyz/feeds/api/standardfeeds/US/most_popular_FilmAnimation",
+      "tab": "featured"
+    },
+    {
+      "title": "Entertainment",
+      "list_id": "entertainment",
+      "video_count": 25,
+      "thumbnail": "http://ytv2.nossl.revivemii.xyz/dl/entertainment.jpg",
+      "gdata_url": "http://ytv2.nossl.revivemii.xyz/feeds/api/standardfeeds/US/most_popular_Entertainment",
+      "tab": "featured"
+    },
+    {
+      "title": "Comedy",
+      "list_id": "comedy",
+      "video_count": 25,
+      "thumbnail": "http://ytv2.nossl.revivemii.xyz/dl/comedy.jpg",
+      "gdata_url": "http://ytv2.nossl.revivemii.xyz/feeds/api/standardfeeds/US/most_popular_Comedy",
+      "tab": "featured"
+    },
+    {
+      "title": "News & Politics",
+      "list_id": "news_politics",
+      "video_count": 25,
+      "thumbnail": "http://ytv2.nossl.revivemii.xyz/dl/news_politics.jpg",
+      "gdata_url": "http://ytv2.nossl.revivemii.xyz/feeds/api/standardfeeds/US/most_popular_NewsPolitics",
+      "tab": "featured"
+    },
+    {
+      "title": "People & Blogs",
+      "list_id": "people_blogs",
+      "video_count": 25,
+      "thumbnail": "http://ytv2.nossl.revivemii.xyz/dl/people_blogs.jpg",
+      "gdata_url": "http://ytv2.nossl.revivemii.xyz/feeds/api/standardfeeds/US/most_popular_PeopleBlogs",
+      "tab": "featured"
+    },
+    {
+      "title": "Science & Technology",
+      "list_id": "science_technology",
+      "video_count": 25,
+      "thumbnail": "http://ytv2.nossl.revivemii.xyz/dl/science_technology.jpg",
+      "gdata_url": "http://ytv2.nossl.revivemii.xyz/feeds/api/standardfeeds/US/most_popular_ScienceTech",
+      "tab": "featured"
+    },
+    {
+      "title": "Howto & Style",
+      "list_id": "howto_style",
+      "video_count": 25,
+      "thumbnail": "http://ytv2.nossl.revivemii.xyz/dl/howto_style.jpg",
+      "gdata_url": "http://ytv2.nossl.revivemii.xyz/feeds/api/standardfeeds/US/most_popular_HowtoStyle",
+      "tab": "featured"
+    },
+    {
+      "title": "Education",
+      "list_id": "education",
+      "video_count": 25,
+      "thumbnail": "http://ytv2.nossl.revivemii.xyz/dl/education.jpg",
+      "gdata_url": "http://ytv2.nossl.revivemii.xyz/feeds/api/standardfeeds/US/most_popular_Education",
+      "tab": "featured"
+    },
+    {
+      "title": "Pets & Animals",
+      "list_id": "pets_animals",
+      "video_count": 25,
+      "thumbnail": "http://ytv2.nossl.revivemii.xyz/dl/pets_animals.jpg",
+      "gdata_url": "http://ytv2.nossl.revivemii.xyz/feeds/api/standardfeeds/US/most_popular_PetsAnimals",
+      "tab": "featured"
+    },
+    {
+      "title": "YouTube Trends",
+      "list_id": "trends",
+      "video_count": 25,
+      "thumbnail": "http://ytv2.nossl.revivemii.xyz/dl/trending.jpg",
+      "gdata_url": "http://ytv2.nossl.revivemii.xyz/feeds/api/users/trends/favorites",
+      "tab": "featured"
     }
   ]
 }
