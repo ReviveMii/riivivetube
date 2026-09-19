@@ -193,9 +193,9 @@ class GetVideoInfo:
             f"videoId={videoId}&"
             f"fmtList={fmtList}&"
             f"fmtStreamMap={fmtStreamMap}&"
-            f"cc_module=http://192.168.100.2:5005/assets/subtitle_module.swf&"
+            f"cc_module=http://ytv2.nossl.revivemii.xyz/assets/subtitle_module.swf&"
             f"cc_load_policy=3&" # set to 1 to force subtitles if you want subtitles. currently disabled because you cant disable the subtitles, will be fixed someday
-            f"{quote('http://192.168.100.2:5005/timedtext?', safe='')}"
+            f"{quote('http://ytv2.nossl.revivemii.xyz/timedtext?', safe='')}"
         )
         return Response(response_str, content_type='text/plain')
 
@@ -346,7 +346,7 @@ def video_details(video_id):
         }
 
         root = ET.Element('entry')
-        ET.SubElement(root, 'id').text = f"http://192.168.100.2:5005/feeds/api/videos/{video_id}"
+        ET.SubElement(root, 'id').text = f"http://ytv2.nossl.revivemii.xyz/feeds/api/videos/{video_id}"
         ET.SubElement(root, 'title').text = video_info.get('title', '')
         ET.SubElement(root, 'published').text = video_info.get('publishedText', '')
         author = ET.SubElement(root, 'author')
@@ -425,19 +425,19 @@ def wiitv():
     if get_flashvars:
         flashvars = {
             "enabled_features": "captions",
-            "gdata_url": "http://192.168.100.2:5005",
+            "gdata_url": "http://ytv2.nossl.revivemii.xyz",
             "country": request.args.get("country") or "US",
             "vendor": vendor or "NINTENDO",
             "model": model or "wii",
             "cc_load_policy": "3",
             "captions": "1",
-            "base_url": "http://192.168.100.2:5005",
+            "base_url": "http://ytv2.nossl.revivemii.xyz",
             "ps": "lbl",
             "el": "leanback",
             "ea": "1",
             "upgrade_notify": "",
             "upgrade_forced": "",
-            "upgrade_bg": "http://192.168.100.2:5005/upgrade_bg"
+            "upgrade_bg": "http://ytv2.nossl.revivemii.xyz/upgrade_bg"
         }
         return Response(urlencode(flashvars), status=200, headers={"Content-Type": "application/x-www-form-urlencoded"})
     return send_from_directory("assets", "leanbacklite_wii.swf", mimetype='application/x-shockwave-flash')
@@ -953,12 +953,12 @@ class Invidious:
 
         for item in json_data:
             xml_string += '<entry>'
-            xml_string += '<id>http://192.168.100.2:5005/api/videos/' + self.escape_xml(item["videoId"]) + '</id>'
+            xml_string += '<id>http://ytv2.nossl.revivemii.xyz/api/videos/' + self.escape_xml(item["videoId"]) + '</id>'
             xml_string += '<published>' + self.escape_xml(item.get("publishedText", "")) + '</published>'
             xml_string += '<title type="text">' + self.escape_xml(item.get("title", "")) + '</title>'
-            xml_string += '<link rel="http://192.168.100.2:5005/api/videos/' + self.escape_xml(item["videoId"]) + '/related"/>'
+            xml_string += '<link rel="http://ytv2.nossl.revivemii.xyz/api/videos/' + self.escape_xml(item["videoId"]) + '/related"/>'
             xml_string += '<author><name>' + self.escape_xml(item.get("author", "")) + '</name>'
-            xml_string += '<uri>http://192.168.100.2:5005/api/channels/' + self.escape_xml(item.get("authorId", "")) + '</uri></author>'
+            xml_string += '<uri>http://ytv2.nossl.revivemii.xyz/api/channels/' + self.escape_xml(item.get("authorId", "")) + '</uri></author>'
             xml_string += '<media:group>'
             xml_string += '<media:thumbnail yt:name="hqdefault" url="http://i.ytimg.com/vi/' + self.escape_xml(item["videoId"]) + '/hqdefault.jpg" height="240" width="320" time="00:00:00"/>'
             xml_string += '<yt:duration seconds="' + self.escape_xml(str(item.get("lengthSeconds", 0))) + '"/>'
