@@ -69,11 +69,24 @@ def _run_transcode_job(video_id, flv_path, job):
                 'yt-dlp',
                 f'https://www.youtube.com/watch?v={video_id}',
                 '-f', '18',
-                '--extractor-args', 'youtube:player_client=web,web_embedded,tvhtml5_simply,android',
+                '--extractor-args', 'youtube:player_client=web,web_embedded,tv_simply,android',
                 '--cookies', 'cookies.txt',
                 '-o', downloaded_path
             ]
+            result = subprocess.run(ytdlp_cmd, capture_output=True, text=True)
+            
+            if result.returncode != 0:
+                print(f"WARNING: yt-dlp clients with cookies failed, are cookies missing?")
+                ytdlp_cmd = [
+                    'yt-dlp',
+                    f'https://www.youtube.com/watch?v={video_id}',
+                    '-f', '18',
+                    '--extractor-args', 'youtube:player_client=android',
+                    '-o', downloaded_path
+                ]
+                result = subprocess.run(ytdlp_cmd, capture_output=True, text=True)
         else:
+            print(f"WARNING: cookies.txt not found")
             ytdlp_cmd = [
                 'yt-dlp',
                 f'https://www.youtube.com/watch?v={video_id}',
@@ -81,8 +94,8 @@ def _run_transcode_job(video_id, flv_path, job):
                 '--extractor-args', 'youtube:player_client=android',
                 '-o', downloaded_path
             ]
+            result = subprocess.run(ytdlp_cmd, capture_output=True, text=True)
 
-        result = subprocess.run(ytdlp_cmd, capture_output=True, text=True)
         if result.returncode != 0:
             error_msg = f"yt-dlp error: {result.stderr}"
             send_discord_error(video_id, error_msg)
