@@ -19,7 +19,7 @@ fi
 echo ""
 echo "Replacing ReviveMii Adress with '$SERVER_ADDR'..."
 
-FILES=("main.py" "youtubei.py" "assets/leanback_ajax.json")
+FILES=("scraper.py" "routes/video.py" "routes/wiitv.py" "youtubei/tv.py" "assets/json/featured.json")
 
 for file in "${FILES[@]}"; do
     if [ -f "$file" ]; then
@@ -54,7 +54,7 @@ echo ""
 echo "Patching .swf files"
 
 if [ -d "assets" ]; then
-    for swf in assets/*.swf; do
+    for swf in assets/swf/*.swf; do
         if [ -f "$swf" ]; then
             filename=$(basename "$swf")
             echo "  Patching: $filename"

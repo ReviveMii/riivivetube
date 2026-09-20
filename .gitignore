@@ -1,4 +1,5 @@
 cookies.txt
 __pycache__
 replace-in-swf-*.jar
-flvcache
+cache
+webhook.txt

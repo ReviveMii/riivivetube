@@ -18,7 +18,7 @@ if "%SERVER_ADDR%"=="" (
 echo.
 echo Replacing ReviveMii Adress with '%SERVER_ADDR%'...
 
-set "FILES=main.py youtubei.py assets\leanback_ajax.json"
+set "FILES=scraper.py routes\video.py routes\wiitv.py youtubei\tv.py assets\json\featured.json"
 
 for %%f in (%FILES%) do (
     if exist "%%f" (
@@ -46,7 +46,7 @@ echo.
 echo Patching .swf files...
 
 if exist "assets" (
-    for %%s in (assets\*.swf) do (
+    for %%s in (assets\swf\*.swf) do (
         echo   Patching: %%~nxs
         java -jar "%JAR_FILE%" "%%s" "%%s" "ytv2.nossl.revivemii.xyz" "%SERVER_ADDR%" >nul 2>&1
     )
