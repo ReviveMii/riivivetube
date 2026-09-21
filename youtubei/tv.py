@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import requests
 
 from .parsing import escape_xml, _iter_grid_tiles, _iter_tiles, _tile_to_fields
+from .parsing import _prefetch_views
 
 def build_river_xml_tv(json_data):
     xml_string = '<?xml version="1.0" encoding="UTF-8"?>'
@@ -28,6 +29,7 @@ def build_river_xml_tv(json_data):
     xml_string += '<openSearch:startIndex>1</openSearch:startIndex>'
     xml_string += '<openSearch:itemsPerPage>20</openSearch:itemsPerPage>'
 
+    _prefetch_views(list(_iter_tiles(json_data)))
     for tile in _iter_tiles(json_data):
         f = _tile_to_fields(tile)
         if not f["video_id"]:
@@ -190,6 +192,7 @@ def build_watch_history_xml(json_data):
     xml_string += '<openSearch:startIndex>1</openSearch:startIndex>'
     xml_string += '<openSearch:itemsPerPage>20</openSearch:itemsPerPage>'
 
+    _prefetch_views(list(_iter_grid_tiles(json_data)))
     for tile in _iter_grid_tiles(json_data):
         f = _tile_to_fields(tile)
         if not f["video_id"]:
@@ -272,6 +275,7 @@ def build_watch_later_xml(json_data):
     xml_string += '<openSearch:startIndex>1</openSearch:startIndex>'
     xml_string += '<openSearch:itemsPerPage>20</openSearch:itemsPerPage>'
 
+    _prefetch_views(tiles)
     for tile in tiles:
         f = _tile_to_fields(tile)
         if not f["video_id"]:
@@ -348,6 +352,7 @@ def build_favorites_xml(json_data):
     xml_string += '<openSearch:startIndex>1</openSearch:startIndex>'
     xml_string += '<openSearch:itemsPerPage>20</openSearch:itemsPerPage>'
 
+    _prefetch_views(tiles)
     for tile in tiles:
         f = _tile_to_fields(tile)
         if not f["video_id"]:
