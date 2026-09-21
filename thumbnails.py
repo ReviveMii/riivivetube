@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import requests
 import xml.etree.ElementTree as ET
 import time
+import threading
+import queue
 
 from config import CATEGORIES, CATEGORY_MAP, thumbnail_url_cache
 
@@ -65,3 +67,66 @@ def thumbnail_scheduler():
             else:
                 print(f"[{category}] video id missing")
         time.sleep(60)
+
+
+THUMB_ORDER = ["music", "sports", "gaming", "trending", "film_animation", "entertainment", "comedy",
+               "news_politics", "people_blogs", "science_technology", "howto_style", "education", "pets_animals"]
+THUMB_TTL = 30 * 60
+THUMB_STANDBY_DELAY = 1.0       # just to make it easy on the server.. make it 0 if theres no need
+THUMB_WARM_COUNT = 5
+
+_url_time = {}
+_standby_queue = queue.Queue()
+_standby_pending = set()
+_standby_guard = threading.Lock()
+_NAME_TO_ROUTE = {name: route for route, name in CATEGORY_MAP.items()}
+
+
+def _expire_old(name):
+    if name in thumbnail_url_cache:
+        first_seen = _url_time.setdefault(name, time.time())
+        if time.time() - first_seen > THUMB_TTL:
+            thumbnail_url_cache.pop(name, None)
+            _url_time.pop(name, None)
+    else:
+        _url_time.pop(name, None)
+
+
+def queue_standby(name):
+    _expire_old(name)
+    if name not in THUMB_ORDER:
+        return
+    idx = THUMB_ORDER.index(name)
+    if idx + 1 >= len(THUMB_ORDER):
+        return
+    nxt = THUMB_ORDER[idx + 1]
+    _expire_old(nxt)
+    if nxt in thumbnail_url_cache:
+        return
+    with _standby_guard:
+        if nxt in _standby_pending:
+            return
+        _standby_pending.add(nxt)
+    _standby_queue.put(nxt)
+
+
+def _resolve_thumbnail(name):
+    video_id = get_first_video_id_from_route(_NAME_TO_ROUTE[name])
+    if video_id and name not in thumbnail_url_cache:
+        cache_thumbnail_url(video_id, name)
+        _url_time[name] = time.time()
+
+
+def standby_worker():
+    time.sleep(5)
+    for name in THUMB_ORDER[:THUMB_WARM_COUNT]:
+        if name not in thumbnail_url_cache:
+            _resolve_thumbnail(name)
+    while True:
+        name = _standby_queue.get()
+        try:
+            _resolve_thumbnail(name)
+        finally:
+            with _standby_guard:
+                _standby_pending.discard(name)
+        time.sleep(THUMB_STANDBY_DELAY)
