@@ -32,8 +32,8 @@ for %%f in (%FILES%) do (
 echo.
 echo Downloading ReplaceInSwf...
 
-set "JAR_URL=https://github.com/ReviveMii/ReplaceInSwf/releases/download/v1.0.0/replace-in-swf-1.0.0.jar"
-set "JAR_FILE=replace-in-swf-1.0.0.jar"
+set "JAR_URL=https://github.com/ReviveMii/ReplaceInSwf/releases/download/v1.0.1/replace-in-swf-1.0.1.jar"
+set "JAR_FILE=replace-in-swf-1.0.1.jar"
 
 if not exist "%JAR_FILE%" (
     powershell -Command "Invoke-WebRequest -Uri '%JAR_URL%' -OutFile '%JAR_FILE%'"

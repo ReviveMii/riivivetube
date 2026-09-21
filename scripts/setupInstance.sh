@@ -33,8 +33,8 @@ done
 echo ""
 echo "Downloading ReplaceInSwf..."
 
-JAR_URL="https://github.com/ReviveMii/ReplaceInSwf/releases/download/v1.0.0/replace-in-swf-1.0.0.jar"
-JAR_FILE="replace-in-swf-1.0.0.jar"
+JAR_URL="https://github.com/ReviveMii/ReplaceInSwf/releases/download/v1.0.1/replace-in-swf-1.0.1.jar"
+JAR_FILE="replace-in-swf-1.0.1.jar"
 
 if [ ! -f "$JAR_FILE" ]; then
     if command -v wget &> /dev/null; then
