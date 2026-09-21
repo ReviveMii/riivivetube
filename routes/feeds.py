@@ -25,6 +25,7 @@ from flask import Blueprint, request, Response, jsonify, abort
 from config import CATEGORY_MAP, thumbnail_url_cache
 from scraper import scrape
 from thumbnails import get_first_video_id_from_route
+from thumbnails import queue_standby
 
 bp = Blueprint('feeds', __name__)
 
@@ -181,6 +182,7 @@ def serve_thumbnail(category):
     allowed = set(CATEGORY_MAP.values())
     if category not in allowed:
         abort(404)
+    queue_standby(category)
 
     url = thumbnail_url_cache.get(category)
     if not url:
