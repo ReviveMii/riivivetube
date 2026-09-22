@@ -28,8 +28,6 @@ from .parsing import (
     escape_xml, _text_of, _collect_line_texts, _tile_to_fields, _prefetch_views, _parse_view_count,
 )
 
-SERVER_URL = "http://ytv2.nossl.revivemii.xyz"
-
 
 def _tv_browse(browse_id, oauth_token=None, params=None, lang="en", gl="US"):
     headers = {
@@ -242,7 +240,7 @@ def prefetch_subscriptions(oauth_token):
     _prefetched[oauth_token] = _job_pool.submit(_load_subscriptions, oauth_token)
 
 
-def fetch_subscriptions(oauth_token, base=SERVER_URL):
+def fetch_subscriptions(oauth_token, base="http://ytv2.nossl.revivemii.xyz"):
     future = _prefetched.pop(oauth_token, None)
     if future is not None:
         try:
@@ -299,7 +297,7 @@ def build_playlists_xml(tiles, base):
     return _feed_head("Playlists", count) + entries + '</feed>'
 
 
-def fetch_playlists(oauth_token, base=SERVER_URL):
+def fetch_playlists(oauth_token, base="http://ytv2.nossl.revivemii.xyz"):
     for browse_id in ("FEplaylist_aggregation", "FElibrary", "FEmy_youtube"):
         data, status = _tv_browse(browse_id, oauth_token)
         if data is None:
@@ -312,7 +310,7 @@ def fetch_playlists(oauth_token, base=SERVER_URL):
     return build_playlists_xml([], base), 200
 
 
-def fetch_playlist_videos(playlist_id, oauth_token, base=SERVER_URL):
+def fetch_playlist_videos(playlist_id, oauth_token, base="http://ytv2.nossl.revivemii.xyz"):
     safe_id = re.sub(r"[^A-Za-z0-9_-]", "", playlist_id)
     data, status = _tv_browse("VL" + safe_id, oauth_token or None)
     if data is None:
@@ -321,7 +319,7 @@ def fetch_playlist_videos(playlist_id, oauth_token, base=SERVER_URL):
     return _video_feed_xml("Playlist", tiles, base), 200
 
 
-def fetch_channel_uploads(channel_id, oauth_token, base=SERVER_URL):
+def fetch_channel_uploads(channel_id, oauth_token, base="http://ytv2.nossl.revivemii.xyz"):
     if channel_id == "default":
         return fetch_own_uploads(oauth_token, base)
     safe_id = re.sub(r"[^A-Za-z0-9_-]", "", channel_id)
@@ -391,7 +389,7 @@ def _get_own_channel_id(oauth_token):
         return None
 
 
-def fetch_own_uploads(oauth_token, base=SERVER_URL):
+def fetch_own_uploads(oauth_token, base="http://ytv2.nossl.revivemii.xyz"):
     if not oauth_token:
         return _feed_head("Uploads", 0) + '</feed>', 200
 

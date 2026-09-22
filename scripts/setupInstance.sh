@@ -19,7 +19,7 @@ fi
 echo ""
 echo "Replacing ReviveMii Adress with '$SERVER_ADDR'..."
 
-FILES=("scraper.py" "routes/video.py" "routes/wiitv.py" "youtubei/tv.py" "assets/json/featured.json")
+FILES=("scraper.py" "routes/video.py" "routes/wiitv.py" "youtubei/tv.py" "youtubei/library.py" "assets/json/featured.json")
 
 for file in "${FILES[@]}"; do
     if [ -f "$file" ]; then

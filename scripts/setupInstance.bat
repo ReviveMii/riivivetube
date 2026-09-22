@@ -18,7 +18,7 @@ if "%SERVER_ADDR%"=="" (
 echo.
 echo Replacing ReviveMii Adress with '%SERVER_ADDR%'...
 
-set "FILES=scraper.py routes\video.py routes\wiitv.py youtubei\tv.py assets\json\featured.json"
+set "FILES=scraper.py routes\video.py routes\wiitv.py youtubei\tv.py youtubei\library.py assets\json\featured.json"
 
 for %%f in (%FILES%) do (
     if exist "%%f" (
