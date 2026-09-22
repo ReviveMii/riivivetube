@@ -165,20 +165,3 @@ def _build_context(video_id=None, graft_url=None):
             "lockedSafetyMode": False
         }
     }
-
-
-_fetch_visitor_data_uncached = _fetch_visitor_data
-
-
-_visitor_cache = {"value": None, "time": 0}
-
-
-def _fetch_visitor_data():
-    now = time.time()
-    if _visitor_cache["value"] and now - _visitor_cache["time"] < 3600:
-        return _visitor_cache["value"]
-    value = _fetch_visitor_data_uncached()
-    if value and value != "0":
-        _visitor_cache["value"] = value
-        _visitor_cache["time"] = now
-    return value
