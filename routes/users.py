@@ -87,6 +87,7 @@ def feeds_users_default():
     if not oauth_token:
         return Response(status=401)
 
+    youtubei.prefetch_subscriptions(oauth_token)  # ok
     xml_data, status = youtubei.fetch_user_info(oauth_token)
     if xml_data is None:
         return Response(status=status)
@@ -142,4 +143,44 @@ def feeds_river_default():
     if xml_data is None:
         return Response(status=status)
 
+    return Response(xml_data, mimetype="text/atom+xml")
+
+
+@bp.route("/feeds/api/users/default/subscriptions", methods=["GET"])
+def feeds_subscriptions_default():
+    oauth_token = request.args.get("oauth_token", "")
+    if not oauth_token:
+        return Response(status=401)
+    xml_data, status = youtubei.fetch_subscriptions(oauth_token)
+    if xml_data is None:
+        return Response(status=status)
+    return Response(xml_data, mimetype="text/atom+xml")
+
+
+@bp.route("/feeds/api/users/default/playlists", methods=["GET"])
+def feeds_playlists_default():
+    oauth_token = request.args.get("oauth_token", "")
+    if not oauth_token:
+        return Response(status=401)
+    xml_data, status = youtubei.fetch_playlists(oauth_token)
+    if xml_data is None:
+        return Response(status=status)
+    return Response(xml_data, mimetype="text/atom+xml")
+
+
+@bp.route("/feeds/api/users/<user_id>/uploads", methods=["GET"])
+def feeds_user_uploads(user_id):
+    oauth_token = request.args.get("oauth_token", "")
+    xml_data, status = youtubei.fetch_channel_uploads(user_id, oauth_token)
+    if xml_data is None:
+        return Response(status=status)
+    return Response(xml_data, mimetype="text/atom+xml")
+
+
+@bp.route("/feeds/api/playlists/<playlist_id>", methods=["GET"])
+def feeds_playlist_videos(playlist_id):
+    oauth_token = request.args.get("oauth_token", "")
+    xml_data, status = youtubei.fetch_playlist_videos(playlist_id, oauth_token)
+    if xml_data is None:
+        return Response(status=status)
     return Response(xml_data, mimetype="text/atom+xml")

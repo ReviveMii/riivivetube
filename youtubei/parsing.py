@@ -19,6 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import re
 import xml.sax.saxutils as saxutils
 from datetime import datetime, timedelta
+import time
+import requests
+from concurrent.futures import ThreadPoolExecutor
+from .client import _get_base_headers, _build_context
 
 def escape_xml(text):
     return saxutils.escape(text or "")
@@ -145,6 +149,19 @@ def _tile_to_fields(tile):
             elif simple.startswith("vor "):
                 published_text = simple
 
+    if not view_count_text:
+        for simple in _collect_line_texts(meta):
+            low = simple.lower()
+            if simple != author_name and re.search(r"\d", simple) and (re.search(r"\bviews?\b", low) or "aufruf" in low):
+                view_count_text = simple
+                break
+        else:
+            if video_id in _view_cache:
+                view_count_text = f"{_view_cache[video_id][0]} views"
+
+    if view_count_text and _is_abbreviated_views(view_count_text) and video_id in _view_cache:
+        view_count_text = f"{_view_cache[video_id][0]} views"
+
     author_id = ""
     try:
         menu_items = (tile["onLongPressCommand"]["showMenuCommand"]["menu"]
@@ -230,3 +247,90 @@ def _extract_videos_from_items(items):
             contents = item.get("shelfRenderer", {}).get("content", {}).get("expandedShelfContentsRenderer", {}).get("items", [])
             videos.extend(_extract_videos_from_items(contents))
     return videos
+
+
+_view_cache = {}
+
+
+_VIEW_CACHE_TTL = 6 * 3600
+EXACT_VIEWS_LIMIT = 20
+_view_pool = ThreadPoolExecutor(max_workers=8)
+
+
+def _text_of(txt):
+    if isinstance(txt, str):
+        return txt
+    if not isinstance(txt, dict):
+        return ""
+    if txt.get("simpleText"):
+        return txt["simpleText"]
+    return "".join(r.get("text", "") for r in txt.get("runs", []) if isinstance(r, dict))
+
+
+def _collect_line_texts(meta):
+    out = []
+    for line in meta.get("lines", []):
+        for li in line.get("lineRenderer", {}).get("items", []):
+            t = _text_of(li.get("lineItemRenderer", {}).get("text", {})).strip()
+            if t:
+                out.append(t)
+    return out
+
+
+def _is_abbreviated_views(text):
+    return bool(re.search(r"\d\s*(?:[KMB]|Mio\.?|Mrd\.?|Tsd\.?)(?![A-Za-z])", text or ""))
+
+
+def _tile_view_text(tile):
+    meta = tile.get("metadata", {}).get("tileMetadataRenderer", {})
+    for t in _collect_line_texts(meta):
+        low = t.lower()
+        if re.search(r"\bviews?\b", low) or "aufruf" in low:
+            return t
+    return ""
+
+
+def _fetch_view_count(video_id):
+    try:
+        resp = requests.post(
+            "https://www.youtube.com/youtubei/v1/next",
+            json={"context": _build_context(video_id=video_id), "videoId": video_id},
+            headers=_get_base_headers(),
+            timeout=15,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        results = (data.get("contents", {}).get("twoColumnWatchNextResults", {})
+                   .get("results", {}).get("results", {}).get("contents", []))
+        for c in results:
+            pi = c.get("videoPrimaryInfoRenderer")
+            if pi:
+                vc = pi.get("viewCount", {}).get("videoViewCountRenderer", {})
+                text = _text_of(vc.get("viewCount", {})) or _text_of(vc.get("shortViewCount", {}))
+                return _parse_view_count(text)
+    except Exception:
+        pass
+    return None
+
+
+def _prefetch_views(tiles, limit=None):
+    limit = EXACT_VIEWS_LIMIT if limit is None else limit
+    now = time.time()
+    ids = []
+    for tile in list(tiles)[:limit]:
+        vid = tile.get("contentId", "")
+        if not vid or len(vid) != 11:
+            continue
+        text = _tile_view_text(tile)
+        if text and not _is_abbreviated_views(text):
+            continue
+        cached = _view_cache.get(vid)
+        if cached and now - cached[1] < _VIEW_CACHE_TTL:
+            continue
+        ids.append(vid)
+    ids = list(dict.fromkeys(ids))
+    if not ids:
+        return
+    for vid, count in zip(ids, _view_pool.map(_fetch_view_count, ids)):
+        if count is not None:
+            _view_cache[vid] = (count, now)

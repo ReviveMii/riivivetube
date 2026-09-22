@@ -25,8 +25,8 @@ If you want to avoid YouTube blocking your IP, use a [cookies.txt file](https://
 
 ## TODO
 - Higher video quality (360p)
-- Fix 0 views on watch_later and watch_history (Signed-In)
-- Implement subscriptions, etc (Signed-In)
+- ~~Fix 0 views on watch_later and watch_history (Signed-In)~~
+- ~~Implement subscriptions, etc (Signed-In)~~
 - Implement Pairing/Lounge API Proxy
 - Fully implement Subtitles
 - Implement Pagination

@@ -26,3 +26,34 @@ from .tv import (
     fetch_favorites,
 )
 from .parsing import escape_xml
+from .library import (
+    fetch_subscriptions,
+    fetch_playlists,
+    fetch_playlist_videos,
+    fetch_channel_uploads,
+    empty_feed_xml,
+)
+from .library import prefetch_subscriptions
+import threading as _threading
+import time as _time
+
+SEARCH_CACHE_TTL = 5 * 60
+_search_cache = {}
+_search_lock = _threading.Lock()
+_innertube_search_uncached = innertube_search
+
+
+def innertube_search(query, region="US", max_results=50):
+    key = (query, region, max_results)
+    now = _time.time()
+    with _search_lock:
+        hit = _search_cache.get(key)
+    if hit and now - hit[0] < SEARCH_CACHE_TTL:
+        return hit[1]
+    results = _innertube_search_uncached(query, region, max_results)
+    if results:
+        with _search_lock:
+            if len(_search_cache) > 200:
+                _search_cache.clear()
+            _search_cache[key] = (now, results)
+    return results
