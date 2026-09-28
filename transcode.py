@@ -69,7 +69,7 @@ def _run_transcode_job(video_id, flv_path, job):
                 'yt-dlp',
                 f'https://www.youtube.com/watch?v={video_id}',
                 '-f', '18',
-                '--extractor-args', 'youtube:player_client=web,web_embedded,tv_simply,android',
+                '--extractor-args', 'youtube:player_client=mweb,tv_simply,web,web_embedded',
                 '--cookies', 'cookies.txt',
                 '-o', downloaded_path
             ]
