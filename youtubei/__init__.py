@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 from .video import get_video_info
+from .captions import get_caption_tracks, fetch_caption_cues
 from .search import innertube_search, innertube_trending
 from .tv import (
     fetch_river_tv,

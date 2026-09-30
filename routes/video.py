@@ -69,7 +69,7 @@ class GetVideoInfo:
             f"fmtList={fmtList}&"
             f"fmtStreamMap={fmtStreamMap}&"
             f"cc_module=http://ytv2.nossl.revivemii.xyz/assets/subtitle_module.swf&"
-            f"cc_load_policy=3&" # set to 1 to force subtitles if you want subtitles. currently disabled because you cant disable the subtitles, will be fixed someday
+            f"cc_load_policy=3&"
             f"{quote('http://ytv2.nossl.revivemii.xyz/timedtext?', safe='')}"
         )
         return Response(response_str, content_type='text/plain')

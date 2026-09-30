@@ -74,6 +74,10 @@ def leanbackajax():
     return send_from_directory("assets/json", "featured.json", mimetype='application/json')
 
 
+@bp.route("/assets/subtitle_module.swf")
+def subtitlemodule():
+    return send_from_directory("assets/swf", "subtitle_module.swf", mimetype='application/json')
+
 @bp.route("/set_awesome")
 @bp.route('/player_204')
 def player():
