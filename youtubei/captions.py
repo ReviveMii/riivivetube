@@ -4,6 +4,7 @@ import requests
 import xml.etree.ElementTree as ET
 
 from .client import _fetch_visitor_data
+from subtitles import run_yt_dlp, json3_to_text_list, fetch_subtitle_file
 
 _PLAYER_URL = "https://www.youtube.com/youtubei/v1/player"
 _ANDROID_UA = "com.google.android.youtube/21.26.364 (Linux; U; Android 11) gzip"
@@ -38,7 +39,7 @@ def _player_request(video_id, visitor_data):
     return resp.json()
 
 
-def get_caption_tracks(video_id):
+def _innertube_tracks(video_id):
     try:
         visitor_data = _fetch_visitor_data()
         data = _player_request(video_id, visitor_data)
@@ -68,6 +69,17 @@ def get_caption_tracks(video_id):
         print(f"[youtubei] Error fetching caption tracks: {e}")
         return []
 
+def get_caption_tracks(video_id):
+    tracks = _innertube_tracks(video_id)
+    if tracks:
+        return tracks
+    ytdlp = run_yt_dlp(video_id)
+    if not ytdlp:
+        return []
+    return [
+        {"languageCode": lang, "name": lang.upper(), "kind": "", "baseUrl": ""}
+        for lang in ytdlp
+    ]
 
 def _clean_text(raw):
     text = re.sub(r"<br\s*/?>", "\n", raw)
@@ -77,7 +89,7 @@ def _clean_text(raw):
     return text.strip()
 
 
-def fetch_caption_cues(base_url):
+def _fetch_xml_cues(base_url):
     try:
         resp = requests.get(
             base_url,
@@ -114,3 +126,13 @@ def fetch_caption_cues(base_url):
     except Exception as e:
         print(f"[youtubei] Error fetching caption cues: {e}")
         return []
+
+def fetch_caption_cues(video_id, track):
+    cues = []
+    if track["baseUrl"]:
+        cues = _fetch_xml_cues(track["baseUrl"])
+    if not cues:
+        content = fetch_subtitle_file(video_id, track["languageCode"], "json3")
+        if content:
+            cues = json3_to_text_list(content)
+    return cues

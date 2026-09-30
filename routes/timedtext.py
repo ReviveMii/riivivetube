@@ -89,7 +89,7 @@ def timedtext():
         cache_key = f"cues_{video_id}_{track['languageCode']}_{track['kind']}"
         cues = subtitle_cache.get(cache_key)
         if cues is None:
-            cues = fetch_caption_cues(track['baseUrl'])
+            cues = fetch_caption_cues(video_id, track)
             if cues:
                 subtitle_cache[cache_key] = cues
 
