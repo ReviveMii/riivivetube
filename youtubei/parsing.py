@@ -306,8 +306,11 @@ def _fetch_view_count(video_id):
             pi = c.get("videoPrimaryInfoRenderer")
             if pi:
                 vc = pi.get("viewCount", {}).get("videoViewCountRenderer", {})
-                text = _text_of(vc.get("viewCount", {})) or _text_of(vc.get("shortViewCount", {}))
-                return _parse_view_count(text)
+                text = _text_of(vc.get("viewCount", {}))
+                if not text:
+                    text = _text_of(vc.get("shortViewCount", {}))
+                if text:
+                    return _parse_view_count(text)
     except Exception:
         pass
     return None
