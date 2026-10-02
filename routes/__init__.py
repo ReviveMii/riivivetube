@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 
-from . import video, oauth, users, wiitv, feeds, timedtext, static
+from . import video, oauth, users, wiitv, feeds, timedtext, static, lounge
 
 
 def register_blueprints(app):
@@ -27,3 +27,4 @@ def register_blueprints(app):
     app.register_blueprint(feeds.bp)
     app.register_blueprint(timedtext.bp)
     app.register_blueprint(static.bp)
+    app.register_blueprint(lounge.bp)
