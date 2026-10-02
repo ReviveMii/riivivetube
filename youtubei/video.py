@@ -84,9 +84,9 @@ def get_video_info(video_id):
         if primary_info:
             try:
                 vc_renderer = primary_info.get('viewCount', {}).get('videoViewCountRenderer', {})
-                vc_text = vc_renderer.get('shortViewCount', {}).get('simpleText', '')
+                vc_text = vc_renderer.get('viewCount', {}).get('simpleText', '')
                 if not vc_text:
-                    vc_text = vc_renderer.get('viewCount', {}).get('simpleText', '')
+                    vc_text = vc_renderer.get('shortViewCount', {}).get('simpleText', '')
                 view_count = _parse_view_count(vc_text)
             except Exception:
                 pass
