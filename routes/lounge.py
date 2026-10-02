@@ -27,7 +27,6 @@ from extensions import limiter
 log = logging.getLogger("lounge")
 
 bp = Blueprint("lounge", __name__, url_prefix="/api/lounge")
-limiter.exempt(bp)
 
 YT_LOUNGE = "https://www.youtube.com/api/lounge"
 USER_AGENT = (
@@ -137,6 +136,7 @@ def _track(params):
 
 
 @bp.route("/pairing/generate_screen_id", methods=["GET", "POST"])
+@limiter.limit("10 per hour")
 def generate_screen_id():
     try:
         r = http.post(f"{YT_LOUNGE}/pairing/generate_screen_id", timeout=15)
@@ -148,6 +148,7 @@ def generate_screen_id():
 
 
 @bp.route("/pairing/get_lounge_token", methods=["GET", "POST"])
+@limiter.limit("30 per hour")
 def get_lounge_token():
     screen_id = request.values.get("screen_id", "")
     if not screen_id:
@@ -163,6 +164,7 @@ def get_lounge_token():
 
 
 @bp.route("/pairing/get_pairing_code", methods=["GET", "POST"])
+@limiter.limit("5 per hour")
 def get_pairing_code():
     token = request.values.get("lounge_token", "")
     if not token:
@@ -190,6 +192,7 @@ def get_pairing_code():
 
 
 @bp.route("/bc/bind", methods=["GET", "POST"])
+@limiter.exempt
 def bind():
     params = request.args.to_dict()
     for key, value in BIND_DEFAULTS.items():
