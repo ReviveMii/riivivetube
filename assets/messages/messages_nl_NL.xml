@@ -14,7 +14,7 @@
     <msg name="HELP_AND_TERMS">Help en Voorwaarden</msg>
     <msg name="HELP_CONTENT">Voor de Servicevoorwaarden en ons Privacybeleid, bezoek de computer: &lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;&lt;ph name="START_LINK_TERMS"&gt;http://www.youtube.com/t/terms&lt;/ph&gt;&lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;&lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;Voor klantenservice bezoek de computer: &lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;&lt;ph name="START_LINK_SUPPORT"&gt;http://www.youtube.com/console_support&lt;/ph&gt;</msg>
     <msg name="LOADING">Laden...</msg>
-    <msg name="META_VIEWS">WEERGAVEN</msg>
+    <msg name="META_VIEWS">NUMBER_OF_VIEWS visninger</msg>
     <msg name="MY_YOUTUBE_CHANNELS">Mijn YouTube</msg>
     <msg name="NO_RESULTS">Geen resultaten</msg>
     <msg name="TUMBLER_OFF">Uit</msg>

@@ -14,7 +14,7 @@
     <msg name="HELP_AND_TERMS">ヘルプと利用規約</msg>
     <msg name="HELP_CONTENT">利用規約とプライバシーポリシーについては、コンピューターで以下にアクセスしてください。<ph name="START_BR">&lt;br&gt;</ph><ph name="START_LINK_TERMS">http://www.youtube.com/t/terms</ph><ph name="START_BR">&lt;br&gt;</ph><ph name="START_BR">&lt;br&gt;</ph>カスタマーサポートについては、コンピューターで以下にアクセスしてください。<ph name="START_BR">&lt;br&gt;</ph><ph name="START_LINK_SUPPORT">http://www.youtube.com/console_support</ph></msg>
     <msg name="LOADING">読み込み中...</msg>
-    <msg name="META_VIEWS">視聴回数</msg>
+    <msg name="META_VIEWS">NUMBER_OF_VIEWS 閲覧数</msg>
     <msg name="MY_YOUTUBE_CHANNELS">マイ YouTube</msg>
     <msg name="NO_RESULTS">結果がありません</msg>
     <msg name="TUMBLER_OFF">オフ</msg>

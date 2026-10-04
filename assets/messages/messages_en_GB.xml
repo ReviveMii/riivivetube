@@ -15,7 +15,7 @@
     <msg name="HELP_AND_TERMS">Help &amp; Terms</msg>
     <msg name="HELP_CONTENT">For terms of service and our privacy policy, on your computer go to:&lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;&lt;ph name="START_LINK_TERMS"&gt;http://www.youtube.com/t/terms&lt;/ph&gt;&lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;&lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;For customer support, on your computer go to:&lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;&lt;ph name="START_LINK_SUPPORT"&gt;http://www.youtube.com/console_support&lt;/ph&gt;</msg>
     <msg name="LOADING">Loading...</msg>
-    <msg name="META_VIEWS">NUMBER_OF_VIEWS</msg>
+    <msg name="META_VIEWS">NUMBER_OF_VIEWS views</msg>
     <msg name="MY_YOUTUBE_CHANNELS">My YouTube</msg>
     <msg name="NO_RESULTS">No results</msg>
     <msg name="TUMBLER_OFF">Off</msg>
