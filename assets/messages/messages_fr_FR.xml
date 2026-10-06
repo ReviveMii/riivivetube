@@ -14,7 +14,7 @@
     <msg name="HELP_AND_TERMS">Aide et conditions</msg>
     <msg name="HELP_CONTENT">Pour consulter les conditions d'utilisation et notre politique de confidentialité, sur votre ordinateur, rendez-vous sur :&lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;&lt;ph name="START_LINK_TERMS"&gt;http://www.youtube.com/t/terms&lt;/ph&gt;&lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;&lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;Pour le support client, sur votre ordinateur, rendez-vous sur :&lt;ph name="START_BR"&gt;&amp;lt;br&amp;gt;&lt;/ph&gt;&lt;ph name="START_LINK_SUPPORT"&gt;http://www.youtube.com/console_support&lt;/ph&gt;</msg>
     <msg name="LOADING">Chargement…</msg>
-    <msg name="META_VIEWS">NOMBRE_DE_VUES</msg>
+    <msg name="META_VIEWS">NUMBER_OF_VIEWS vues</msg>
     <msg name="MY_YOUTUBE_CHANNELS">Mon YouTube</msg>
     <msg name="NO_RESULTS">Aucun résultat</msg>
     <msg name="TUMBLER_OFF">Désactivé</msg>
