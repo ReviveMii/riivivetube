@@ -45,6 +45,9 @@ class GetVideoInfo:
         fmtStreamMap = f"43|"
         fmtMap = "43/0/7/0/0"
         thumbnailUrl = f"http://i.ytimg.com/vi/{videoId}/mqdefault.jpg"
+        base = request.host_url.rstrip('/')
+        cc_module = f"{base}/assets/subtitle_module.swf"
+        ttsurl = f"{base}/timedtext?"
 
         response_str = (
             f"status=ok&"
@@ -63,14 +66,13 @@ class GetVideoInfo:
             f"token=null&"
             f"plid=null&"
             f"track_embed=0&"
-            f"author={author}&"
-            f"title={title}&"
+            f"author={quote(str(author), safe='')}&"
+            f"title={quote(str(title), safe='')}&"
             f"videoId={videoId}&"
             f"fmtList={fmtList}&"
             f"fmtStreamMap={fmtStreamMap}&"
-            f"cc_module=http://ytv2.nossl.revivemii.xyz/assets/subtitle_module.swf&"
-            f"cc_load_policy=3&"
-            f"{quote('http://ytv2.nossl.revivemii.xyz/timedtext?', safe='')}"
+            f"cc_module={quote(cc_module, safe='')}&"
+            f"ttsurl={quote(ttsurl, safe='')}"
         )
         return Response(response_str, content_type='text/plain')
 
