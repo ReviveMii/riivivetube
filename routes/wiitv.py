@@ -76,7 +76,7 @@ def leanbackajax():
 
 @bp.route("/assets/subtitle_module.swf")
 def subtitlemodule():
-    return send_from_directory("assets/swf", "subtitle_module.swf", mimetype='application/json')
+    return send_from_directory("assets/swf", "subtitle_module.swf", mimetype='application/x-shockwave-flash')
 
 @bp.route("/set_awesome")
 @bp.route('/player_204')
