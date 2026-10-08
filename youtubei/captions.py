@@ -4,7 +4,8 @@ import requests
 import xml.etree.ElementTree as ET
 
 from .client import _fetch_visitor_data
-from subtitles import run_yt_dlp, json3_to_text_list, fetch_subtitle_file
+from subtitles import (run_yt_dlp, json3_to_text_list, fetch_subtitle_file, clean_caption_text,
+                       dedupe_cues, describe_nonascii, caption_log, filter_supported_tracks)
 
 _PLAYER_URL = "https://www.youtube.com/youtubei/v1/player"
 _ANDROID_UA = "com.google.android.youtube/21.26.364 (Linux; U; Android 11) gzip"
@@ -48,6 +49,10 @@ def _innertube_tracks(video_id):
             .get("playerCaptionsTracklistRenderer", {})
             .get("captionTracks", [])
         )
+        if not tracks:
+            ps = data.get("playabilityStatus", {})
+            caption_log(f"[captions] {video_id}: innertube gave no caption tracks "
+                  f"(playability={ps.get('status')} {ps.get('reason', '')})")
         result = []
         for t in tracks:
             base_url = t.get("baseUrl", "")
@@ -66,27 +71,25 @@ def _innertube_tracks(video_id):
             })
         return result
     except Exception as e:
-        print(f"[youtubei] Error fetching caption tracks: {e}")
+        caption_log(f"[youtubei] Error fetching caption tracks: {e}")
         return []
 
 def get_caption_tracks(video_id):
-    tracks = _innertube_tracks(video_id)
-    if tracks:
+    raw = _innertube_tracks(video_id)
+    if raw:
+        tracks = filter_supported_tracks(raw)
+        caption_log(f"[captions] {video_id}: {len(raw)} track(s) from innertube, {len(tracks)} usable")
         return tracks
-    ytdlp = run_yt_dlp(video_id)
-    if not ytdlp:
-        return []
-    return [
-        {"languageCode": lang, "name": lang.upper(), "kind": "", "baseUrl": ""}
-        for lang in ytdlp
-    ]
+    caption_log(f"[captions] {video_id}: trying yt-dlp fallback")
+    tracks = filter_supported_tracks(run_yt_dlp(video_id) or [])
+    caption_log(f"[captions] {video_id}: {len(tracks)} usable track(s) from yt-dlp")
+    return tracks
 
 def _clean_text(raw):
     text = re.sub(r"<br\s*/?>", "\n", raw)
     text = re.sub(r"<[^>]+>", "", text)
-    text = html.unescape(text).replace("\xa0", " ").replace("\r", "")
-    text = re.sub(r"\n{2,}", "\n", text)
-    return text.strip()
+    text = html.unescape(html.unescape(text))
+    return clean_caption_text(text)
 
 
 def _fetch_xml_cues(base_url):
@@ -122,17 +125,24 @@ def _fetch_xml_cues(base_url):
                     "start": start,
                     "duration": dur if dur > 0 else 2.5,
                 })
-        return cues
+        return dedupe_cues(cues)
     except Exception as e:
-        print(f"[youtubei] Error fetching caption cues: {e}")
+        caption_log(f"[youtubei] Error fetching caption cues: {e}")
         return []
 
 def fetch_caption_cues(video_id, track):
     cues = []
-    if track["baseUrl"]:
+    if track.get("baseUrl"):
         cues = _fetch_xml_cues(track["baseUrl"])
+        if not cues:
+            caption_log(f"{video_id}: baseUrl returned no cues, back to yt-dlp")
     if not cues:
-        content = fetch_subtitle_file(video_id, track["languageCode"], "json3")
+        lang = track.get("ytdlpLang") or track["languageCode"]
+        content = fetch_subtitle_file(video_id, lang, "json3")
         if content:
             cues = json3_to_text_list(content)
+    caption_log(f"[captions] {video_id}: {len(cues)} cue(s) for '{track['languageCode']}'")
+    odd = describe_nonascii(cues)
+    if odd:
+        caption_log(f"[captions] {video_id}: non-ASCII characters in cues: {odd}")
     return cues

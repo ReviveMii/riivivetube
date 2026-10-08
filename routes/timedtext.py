@@ -21,6 +21,7 @@ from flask import Blueprint, request, Response
 
 from extensions import limiter
 from youtubei import get_caption_tracks, fetch_caption_cues
+from subtitles import caption_log
 from config import subtitle_cache
 
 bp = Blueprint('timedtext', __name__)
@@ -45,8 +46,8 @@ def _pick_track(tracks, lang_code):
     return None
 
 
-@bp.route('/timedtext') # currently requires cc_load_policy to be set to 1, will be fixed in the future
-@limiter.limit("10 per minute")
+@bp.route('/timedtext')
+@limiter.limit("60 per minute")
 def timedtext():
     req_type = request.args.get('type')
     video_id = request.args.get('v')
@@ -59,11 +60,7 @@ def timedtext():
         tracks = _tracks(video_id)
 
         if not tracks:
-            xml = '''<transcript_list>
-  <track id="0" name="" lang_code="en" lang_translated="English"
-         kind="" lang_default="true" cantran="false" formats="1"/>
-</transcript_list>'''
-            return Response(xml, content_type='text/xml')
+            return Response('<transcript_list></transcript_list>', content_type='text/xml; charset=utf-8')
 
         track_list_root = ET.Element('transcript_list')
         for track_id, t in enumerate(tracks):
@@ -78,13 +75,13 @@ def timedtext():
             track_elem.set('formats', '1')
 
         xml = ET.tostring(track_list_root, encoding='unicode')
-        return Response(xml, content_type='text/xml')
+        return Response(xml, content_type='text/xml; charset=utf-8')
 
     elif req_type == 'track':
         track = _pick_track(_tracks(video_id), lang_code)
 
         if not track:
-            return Response('<transcript></transcript>', content_type='text/xml')
+            return Response('<transcript></transcript>', content_type='text/xml; charset=utf-8')
 
         cache_key = f"cues_{video_id}_{track['languageCode']}_{track['kind']}"
         cues = subtitle_cache.get(cache_key)
@@ -96,13 +93,13 @@ def timedtext():
         root = ET.Element('transcript')
         for cue in cues:
             text_elem = ET.SubElement(root, 'text')
-            text_elem.set('start', f"{cue['start']:.1f}")
-            text_elem.set('dur', f"{cue['duration']:.1f}")
+            text_elem.set('start', f"{cue['start']:.3f}")
+            text_elem.set('dur', f"{cue['duration']:.3f}")
             text_elem.text = cue['text']
         xml = ET.tostring(root, encoding='unicode')
 
-        print(f"Returning {len(cues)} subtitle cues for {video_id}/{lang_code}")
-        return Response(xml, content_type='text/xml')
+        caption_log(f"Returning {len(cues)} subtitle cues for {video_id}/{lang_code}")
+        return Response(xml, content_type='text/xml; charset=utf-8')
 
     else:
         return "Invalid type parameter", 400
