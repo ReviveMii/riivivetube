@@ -1,3 +1,5 @@
+<img src="https://revivemii.xyz/favicon.ico" alt="ReviveMii Icon" width="100" /> 
+
 # RiiviveTube
 A Revival for the Wii YouTube App
 
@@ -5,6 +7,8 @@ A Revival for the Wii YouTube App
 Download the prepatched WAD [here](https://revivemii.xyz/riivivetube) or [patch your own WAD](https://github.com/ReviveMii/ReviveMiiPatcher)
 
 ## Hosting your own Instance
+### Click [here](https://revivemii.xyz/riivivetube/selfhosting.html) for a better guide
+
 **RiiviveTube currently only supports Linux.** While running this on Windows may work, it is not supported
 
 **Requirements**: ffmpeg, git, python3 with pip, Java OpenJDK 21
