@@ -24,9 +24,9 @@ from urllib.parse import quote
 from flask import Blueprint, request, Response, jsonify, stream_with_context
 
 import youtubei
-from config import FLV_FOLDER
+from config import VIDEO_FOLDER
 from extensions import limiter
-from transcode import _start_transcode_job, _serve_cached_flv, _stream_known_length
+from transcode import _start_transcode_job, _serve_cached_webm, _stream_known_length
 
 bp = Blueprint('video', __name__)
 
@@ -45,9 +45,6 @@ class GetVideoInfo:
         fmtStreamMap = f"43|"
         fmtMap = "43/0/7/0/0"
         thumbnailUrl = f"http://i.ytimg.com/vi/{videoId}/mqdefault.jpg"
-        base = request.host_url.rstrip('/')
-        cc_module = f"{base}/assets/subtitle_module.swf"
-        ttsurl = f"{base}/timedtext?"
 
         response_str = (
             f"status=ok&"
@@ -66,13 +63,14 @@ class GetVideoInfo:
             f"token=null&"
             f"plid=null&"
             f"track_embed=0&"
-            f"author={quote(str(author), safe='')}&"
-            f"title={quote(str(title), safe='')}&"
+            f"author={author}&"
+            f"title={title}&"
             f"videoId={videoId}&"
             f"fmtList={fmtList}&"
             f"fmtStreamMap={fmtStreamMap}&"
-            f"cc_module={quote(cc_module, safe='')}&"
-            f"ttsurl={quote(ttsurl, safe='')}"
+            #f"cc_module=http://ytv2.nossl.revivemii.xyz/assets/subtitle_module.swf&" # broken
+            #f"cc_load_policy=3&" # also broken
+            f"{quote('http://ytv2.nossl.revivemii.xyz/timedtext?', safe='')}"
         )
         return Response(response_str, content_type='text/plain')
 
@@ -92,9 +90,9 @@ def get_video_info():
 def video_details(video_id):
     try:
         safe_id = re.sub(r'[^A-Za-z0-9_-]', '', video_id)
-        flv_path = os.path.join(FLV_FOLDER, f"{safe_id}.flv")
-        if not os.path.exists(flv_path):
-            _start_transcode_job(safe_id, flv_path)
+        videofile_path = os.path.join(VIDEO_FOLDER, f"{safe_id}.webm")
+        if not os.path.exists(videofile_path):
+            _start_transcode_job(safe_id, videofile_path)
 
         video_info = youtubei.get_video_info(video_id)
         if not video_info:
@@ -150,21 +148,21 @@ def video_details(video_id):
 
 
 @bp.route('/get_video', methods=['GET'])
-@limiter.limit("20 per minute")
+@limiter.limit("80 per minute")
 def get_video():
     video_id = request.args.get('video_id')
     if not video_id:
         return "", 400
 
     safe_id = re.sub(r'[^A-Za-z0-9_-]', '', video_id)
-    flv_path = os.path.join(FLV_FOLDER, f"{safe_id}.flv")
+    videofile_path = os.path.join(VIDEO_FOLDER, f"{safe_id}.webm")
 
-    if os.path.exists(flv_path):
-        return _serve_cached_flv(flv_path, safe_id)
+    if os.path.exists(videofile_path):
+        return _serve_cached_webm(videofile_path, safe_id)
 
-    job = _start_transcode_job(safe_id, flv_path)
+    job = _start_transcode_job(safe_id, videofile_path)
     if job is None:
-        return _serve_cached_flv(flv_path, safe_id)
+        return _serve_cached_webm(videofile_path, safe_id)
 
     ready_deadline = time.time() + 20
     while not job["ready"].is_set():
@@ -181,9 +179,9 @@ def get_video():
             time.sleep(0.2)
         if job["error"]:
             return job["error"][0], 500
-        if not os.path.exists(flv_path):
+        if not os.path.exists(videofile_path):
             return "Transcode finished but output file is missing", 500
-        return _serve_cached_flv(flv_path, safe_id)
+        return _serve_cached_webm(videofile_path, safe_id)
 
     total_size = job["total_size"]
 
@@ -201,8 +199,8 @@ def get_video():
             range_end = min(range_end, total_size - 1)
 
     headers = {
-        'Content-Type': 'video/x-flv',
-        'Content-Disposition': f'attachment; filename="{safe_id}.flv"',
+        'Content-Type': 'video/webm',
+        'Content-Disposition': f'attachment; filename="{safe_id}.webm"',
         'Accept-Ranges': 'bytes',
         'Content-Length': str(range_end - range_start + 1),
     }
@@ -211,7 +209,7 @@ def get_video():
         status = 206
         headers['Content-Range'] = f'bytes {range_start}-{range_end}/{total_size}'
 
-    read_path = job["tmp_path"] if not os.path.exists(flv_path) else flv_path
+    read_path = job["tmp_path"] if not os.path.exists(videofile_path) else videofile_path
 
     return Response(
         stream_with_context(_stream_known_length(read_path, job, range_start, range_end)),

@@ -37,12 +37,9 @@ CATEGORY_MAP = {
     "feeds/api/standardfeeds/US/most_popular_PetsAnimals": "pets_animals",
 }
 thumbnail_url_cache = {}
-FLV_FOLDER = "./cache"
+VIDEO_FOLDER = "./cache"
 MESSAGES_FOLDER = "./assets/messages"
-TARGET_BITRATE_BPS = 500_000 + 96_000
-SIZE_ESTIMATE_MARGIN = 1.30
-SIZE_ESTIMATE_OVERHEAD = 200_000
 subtitle_cache = {}
 
-if not os.path.exists(FLV_FOLDER):
-    os.makedirs(FLV_FOLDER)
+if not os.path.exists(VIDEO_FOLDER):
+    os.makedirs(VIDEO_FOLDER)

@@ -26,7 +26,7 @@ from config import CATEGORIES, CATEGORY_MAP, thumbnail_url_cache
 
 def get_first_video_id_from_route(category):
     try:
-        url = f"http://127.0.0.1:5005/{category}"
+        url = f"http://ytv2.nossl.revivemii.xyz/{category}"
         response = requests.get(url)
         if response.status_code != 200:
             print(f"[{category}] Error fetching: HTTP {response.status_code}")

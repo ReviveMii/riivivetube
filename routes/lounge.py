@@ -148,7 +148,7 @@ def generate_screen_id():
 
 
 @bp.route("/pairing/get_lounge_token", methods=["GET", "POST"])
-@limiter.limit("30 per hour")
+@limiter.exempt
 def get_lounge_token():
     screen_id = request.values.get("screen_id", "")
     if not screen_id:
@@ -164,7 +164,7 @@ def get_lounge_token():
 
 
 @bp.route("/pairing/get_pairing_code", methods=["GET", "POST"])
-@limiter.limit("5 per hour")
+@limiter.exempt
 def get_pairing_code():
     token = request.values.get("lounge_token", "")
     if not token:
