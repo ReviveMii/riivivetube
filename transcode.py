@@ -31,8 +31,11 @@ _transcode_jobs_guard = threading.Lock()
 
 _transcode_jobs = {}
 
+def _get_transcode_job(video_id):
+    with _transcode_jobs_guard:
+        return _transcode_jobs.get(video_id)
 
-def _start_transcode_job(video_id, videofile_path):
+def _start_transcode_job(video_id, videofile_path, max_duration=None):
     with _transcode_jobs_guard:
         if os.path.exists(videofile_path):
             return None
@@ -44,6 +47,8 @@ def _start_transcode_job(video_id, videofile_path):
             "done": threading.Event(),
             "ready": threading.Event(),
             "error": [],
+            "error_kind": None,
+            "max_duration": max_duration,
             "written": 0,
             "total_size": None,
             "tmp_path": videofile_path + ".part",
@@ -73,7 +78,7 @@ def _run_transcode_job(video_id, videofile_path, job):
                 '-o', downloaded_path
             ]
             result = subprocess.run(ytdlp_cmd, capture_output=True, text=True)
-            
+
             if result.returncode != 0:
                 print(f"WARNING: yt-dlp clients with cookies failed, are cookies missing?")
                 ytdlp_cmd = [
@@ -96,11 +101,20 @@ def _run_transcode_job(video_id, videofile_path, job):
             result = subprocess.run(ytdlp_cmd, capture_output=True, text=True)
 
         if result.returncode != 0:
+            job["error_kind"] = "download"
             error_msg = f"yt-dlp error: {result.stderr}"
             send_discord_error(video_id, error_msg)
             raise RuntimeError(error_msg)
         if not os.path.exists(downloaded_path):
+            job["error_kind"] = "download"
             raise RuntimeError("Download finished but file missing")
+
+        max_duration = job.get("max_duration")
+        if max_duration:
+            real_duration = _probe_duration(downloaded_path)
+            if real_duration is not None and real_duration > max_duration:
+                job["error_kind"] = "too_long"
+                raise RuntimeError(f"video too long: {real_duration:.0f}s")
 
         job["ready"].set()
         duration = None
@@ -129,6 +143,18 @@ def _run_transcode_job(video_id, videofile_path, job):
                 os.remove(downloaded_path)
         except Exception:
             pass
+
+def _probe_duration(path):
+    try:
+        out = subprocess.run(
+            ['ffprobe', '-v', 'error', '-show_entries', 'format=duration',
+             '-of', 'csv=p=0', path],
+            capture_output=True, text=True, timeout=30
+        )
+        return float(out.stdout.strip())
+    except Exception as e:
+        print(f"WARNING: ffprobe duration check failed: {e}")
+        return None
 
 
 def _serve_cached_webm(videofile_path, safe_id):

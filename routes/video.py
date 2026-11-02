@@ -20,24 +20,51 @@ import os
 import re
 import time
 import xml.etree.ElementTree as ET
-from urllib.parse import quote
+from urllib.parse import quote, quote_plus
 from flask import Blueprint, request, Response, jsonify, stream_with_context
 
 import youtubei
 from config import VIDEO_FOLDER
 from extensions import limiter
-from transcode import _start_transcode_job, _serve_cached_webm, _stream_known_length
+from transcode import _start_transcode_job, _get_transcode_job, _serve_cached_webm
 
 bp = Blueprint('video', __name__)
 
+MSG_TOO_LONG = "Videos over 45 minutes are currently disabled, due to server load issues."
+MSG_UNAVAILABLE = (
+    "This video is unavailable. Livestreams are currently unsupported. If this happens too often with regular videos, please report it in our Discord (www.revivemii.xyz/discord)"
+)
+
+def _fail(reason, code=150):
+    return Response(
+        f"status=fail&errorcode={code}&reason={quote_plus(reason)}",
+        content_type='text/plain'
+    )
 
 class GetVideoInfo:
     def build(self, videoId):
         info = youtubei.get_video_info(videoId)
         if not info:
-            return f"video info error: unable to fetch metadata", 500
-
+            return _fail(MSG_UNAVAILABLE)
         length_seconds = info.get('lengthSeconds', 0)
+        try:
+            length_int = int(length_seconds or 0)
+        except (TypeError, ValueError):
+            length_int = 0
+        if length_int > 45 * 60:
+            return _fail(MSG_TOO_LONG)
+        safe_id = re.sub(r'[^A-Za-z0-9_-]', '', videoId)
+        videofile_path = os.path.join(VIDEO_FOLDER, f"{safe_id}.webm")
+        if not os.path.exists(videofile_path):
+            job = _start_transcode_job(safe_id, videofile_path, max_duration=45 * 60)
+            if job is not None:
+                if not job["ready"].wait(120):
+                    return _fail(MSG_UNAVAILABLE)
+                if job["error"]:
+                    if job["error_kind"] == "too_long":
+                        return _fail(MSG_TOO_LONG)
+                    return _fail(MSG_UNAVAILABLE)
+
         title = info.get('title', '')
         author = info.get('author', '')
 
@@ -76,7 +103,7 @@ class GetVideoInfo:
 
 
 @bp.route('/get_video_info', methods=['GET'])
-@limiter.limit("60 per minute")
+@limiter.limit("20 per minute")
 def get_video_info():
     video_id = request.args.get('video_id')
     if not video_id:
@@ -89,11 +116,6 @@ def get_video_info():
 @bp.route('/feeds/api/videos/<video_id>')
 def video_details(video_id):
     try:
-        safe_id = re.sub(r'[^A-Za-z0-9_-]', '', video_id)
-        videofile_path = os.path.join(VIDEO_FOLDER, f"{safe_id}.webm")
-        if not os.path.exists(videofile_path):
-            _start_transcode_job(safe_id, videofile_path)
-
         video_info = youtubei.get_video_info(video_id)
         if not video_info:
             return Response(
@@ -148,7 +170,7 @@ def video_details(video_id):
 
 
 @bp.route('/get_video', methods=['GET'])
-@limiter.limit("80 per minute")
+@limiter.exempt
 def get_video():
     video_id = request.args.get('video_id')
     if not video_id:
@@ -160,59 +182,16 @@ def get_video():
     if os.path.exists(videofile_path):
         return _serve_cached_webm(videofile_path, safe_id)
 
-    job = _start_transcode_job(safe_id, videofile_path)
+    job = _get_transcode_job(safe_id)
     if job is None:
-        return _serve_cached_webm(videofile_path, safe_id)
+        if os.path.exists(videofile_path):
+            return _serve_cached_webm(videofile_path, safe_id)
+        return "Video not prepared, call get_video_info first", 404
 
-    ready_deadline = time.time() + 20
-    while not job["ready"].is_set():
-        if time.time() > ready_deadline:
-            return "Timed out preparing transcode", 504
-        time.sleep(0.1)
-
-    if job["total_size"] is None:
-        print("WARNING: no duration found, maybe youtube changed something???")
-        wait_deadline = time.time() + 180
-        while not job["done"].is_set():
-            if time.time() > wait_deadline:
-                return "Timed out waiting for transcode to finish", 504
-            time.sleep(0.2)
-        if job["error"]:
-            return job["error"][0], 500
-        if not os.path.exists(videofile_path):
-            return "Transcode finished but output file is missing", 500
-        return _serve_cached_webm(videofile_path, safe_id)
-
-    total_size = job["total_size"]
-
-    range_header = request.environ.get('HTTP_RANGE', '')
-    range_start = 0
-    range_end = total_size - 1
-    is_range = False
-    if range_header:
-        match = re.match(r'bytes=(\d+)-(\d*)', range_header)
-        if match:
-            is_range = True
-            range_start = int(match.group(1))
-            range_end = int(match.group(2)) if match.group(2) else total_size - 1
-            range_start = min(range_start, total_size - 1)
-            range_end = min(range_end, total_size - 1)
-
-    headers = {
-        'Content-Type': 'video/webm',
-        'Content-Disposition': f'attachment; filename="{safe_id}.webm"',
-        'Accept-Ranges': 'bytes',
-        'Content-Length': str(range_end - range_start + 1),
-    }
-    status = 200
-    if is_range:
-        status = 206
-        headers['Content-Range'] = f'bytes {range_start}-{range_end}/{total_size}'
-
-    read_path = job["tmp_path"] if not os.path.exists(videofile_path) else videofile_path
-
-    return Response(
-        stream_with_context(_stream_known_length(read_path, job, range_start, range_end)),
-        status=status,
-        headers=headers
-    )
+    if not job["done"].wait(900):
+        return "Timed out waiting for transcode to finish", 504
+    if job["error"]:
+        return job["error"][0], 500
+    if not os.path.exists(videofile_path):
+        return "Transcode finished but output file is missing", 500
+    return _serve_cached_webm(videofile_path, safe_id)

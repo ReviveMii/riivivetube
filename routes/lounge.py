@@ -136,7 +136,7 @@ def _track(params):
 
 
 @bp.route("/pairing/generate_screen_id", methods=["GET", "POST"])
-@limiter.limit("10 per hour")
+@limiter.exempt
 def generate_screen_id():
     try:
         r = http.post(f"{YT_LOUNGE}/pairing/generate_screen_id", timeout=15)
