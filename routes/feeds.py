@@ -177,6 +177,14 @@ def trending_pets_animals():
         return jsonify({"error": str(e)}), 500
 
 
+@bp.route('/feeds/api/standardfeeds/US/most_popular_Live')
+def trending_live():
+    try:
+        return scrape.live()
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 @bp.route('/dl/<category>.jpg')
 def serve_thumbnail(category):
     allowed = set(CATEGORY_MAP.values())

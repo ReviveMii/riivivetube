@@ -21,13 +21,13 @@ import requests
 from .client import _get_base_headers, _build_context
 from .parsing import _parse_view_count, _extract_length_text_and_seconds, _extract_videos_from_items
 
-def innertube_search(query, region="US", max_results=50):
+def innertube_search(query, region="US", max_results=50, params=""):
     url = "https://www.youtube.com/youtubei/v1/search"
     headers = _get_base_headers()
     payload = {
         "context": _build_context(),
         "query": query,
-        "params": ""
+        "params": params
     }
 
     try:
@@ -73,7 +73,8 @@ def innertube_search(query, region="US", max_results=50):
                 videoThumbnails = vd.get("thumbnail", {}).get("thumbnails", [])
                 desc_runs = vd.get("descriptionSnippet", {}).get("runs", [{}])
                 desc = desc_runs[0].get("text", "") if desc_runs else ""
-                viewCountText = vd.get("viewCountText", {}).get("simpleText", "")
+                vct = vd.get("viewCountText", {})
+                viewCountText = vct.get("simpleText") or "".join(r.get("text", "") for r in vct.get("runs", []))
                 viewCount = _parse_view_count(viewCountText)
                 publishedText = vd.get("publishedTimeText", {}).get("simpleText", "")
                 liveNow = any(

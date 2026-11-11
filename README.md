@@ -28,12 +28,12 @@ If you want to avoid YouTube blocking your IP, use a [cookies.txt file](https://
 - Sign-in
 - Pairing
 - Subtitles
+- Livestreams
   
 ## TODO
 - Implement Pagination
 - Make Webm faster
 - Fix Channel ID/Profilepictures sometimes missing
-- (maybe implement livestreams)
 
 ## Bugs
 - Random crashes (some have been patched)

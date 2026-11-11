@@ -70,7 +70,7 @@ def thumbnail_scheduler():
 
 
 THUMB_ORDER = ["music", "sports", "gaming", "trending", "film_animation", "entertainment", "comedy",
-               "news_politics", "people_blogs", "science_technology", "howto_style", "education", "pets_animals"]
+               "news_politics", "people_blogs", "science_technology", "howto_style", "education", "pets_animals", "live"]
 THUMB_TTL = 30 * 60
 THUMB_STANDBY_DELAY = 1.0       # just to make it easy on the server.. make it 0 if theres no need
 THUMB_WARM_COUNT = 5
