@@ -109,6 +109,15 @@ def _parse_view_count(text):
         multiplier = {"": 1, "K": 1_000, "M": 1_000_000, "B": 1_000_000_000}.get(suffix, 1)
         return int(num * multiplier)
 
+    m = re.match(r"^([\d,\.]+)\s*([KMB]?)\s*watching", t, re.IGNORECASE)
+    if m:
+        try:
+            num = float(m.group(1).replace(",", ""))
+        except ValueError:
+            return 0
+        mult = {"": 1, "K": 1_000, "M": 1_000_000, "B": 1_000_000_000}.get(m.group(2).upper(), 1)
+        return int(num * mult)
+
     digits = re.sub(r"[^\d]", "", t)
     return int(digits) if digits else 0
 
