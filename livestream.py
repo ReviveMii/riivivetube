@@ -36,7 +36,6 @@ START_TIMEOUT = 75
 MAX_SESSIONS = int(os.environ.get("MAX_LIVE_STREAMS", "4"))
 SUB_QUEUE_MAX = 40
 
-_HERE = os.path.dirname(os.path.abspath(__file__))
 
 
 _live_ids = {}
@@ -232,14 +231,7 @@ class LiveSession:
             if self.stopped.is_set():
                 return
             cmd = _build_cmd(exe, self.video_id, urls)
-            log_path = os.path.join(_HERE, "livestream_ffmpeg.log")
-            try:
-                if os.path.getsize(log_path) > 1_000_000:
-                    os.remove(log_path)
-            except OSError:
-                pass
-            log = open(log_path, "ab")
-            self.proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=log)
+            self.proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
             src = self.proc.stdout
 
             header, _cid, first_size = webmlive.read_header(src, LIVE_LENGTH_BYTES, LIVE_DURATION)
