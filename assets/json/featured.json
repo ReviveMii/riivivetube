@@ -111,14 +111,6 @@
       "thumbnail": "http://ytv2.nossl.revivemii.xyz/dl/trending.jpg",
       "gdata_url": "http://ytv2.nossl.revivemii.xyz/feeds/api/users/trends/favorites",
       "tab": "featured"
-    },
-    {
-      "title": "Live Streams",
-      "list_id": "live",
-      "video_count": 25,
-      "thumbnail": "http://ytv2.nossl.revivemii.xyz/dl/live.jpg",
-      "gdata_url": "http://ytv2.nossl.revivemii.xyz/feeds/api/standardfeeds/US/most_popular_Live",
-      "tab": "featured"
     }
   ]
 }
