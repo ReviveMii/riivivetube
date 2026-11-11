@@ -44,14 +44,14 @@ _search_lock = _threading.Lock()
 _innertube_search_uncached = innertube_search
 
 
-def innertube_search(query, region="US", max_results=50):
-    key = (query, region, max_results)
+def innertube_search(query, region="US", max_results=50, params=""):
+    key = (query, region, max_results, params)
     now = _time.time()
     with _search_lock:
         hit = _search_cache.get(key)
     if hit and now - hit[0] < SEARCH_CACHE_TTL:
         return hit[1]
-    results = _innertube_search_uncached(query, region, max_results)
+    results = _innertube_search_uncached(query, region, max_results, params)
     if results:
         with _search_lock:
             if len(_search_cache) > 200:
