@@ -27,12 +27,14 @@ import youtubei
 from config import VIDEO_FOLDER
 from extensions import limiter
 from transcode import _start_transcode_job, _get_transcode_job, _serve_cached_webm
+import livestream
 
 bp = Blueprint('video', __name__)
 
 MSG_TOO_LONG = "Videos over 45 minutes are currently disabled, due to server load issues."
+MSG_LIVE_FAILED = "This livestream could not be started. It may have ended, or the server could not reach it."
 MSG_UNAVAILABLE = (
-    "This video is unavailable. Livestreams are currently unsupported. If this happens too often with regular videos, please report it in our Discord (www.revivemii.xyz/discord)"
+    "This video is unavailable. If this happens too often with regular videos, please report it in our Discord (www.revivemii.xyz/discord)"
 )
 
 def _fail(reason, code=150):
@@ -46,16 +48,25 @@ class GetVideoInfo:
         info = youtubei.get_video_info(videoId)
         if not info:
             return _fail(MSG_UNAVAILABLE)
+        is_live = bool(info.get('isLive'))
         length_seconds = info.get('lengthSeconds', 0)
+        if is_live:
+            livestream.mark_live(videoId)
+            livestream.remember_start(videoId, info.get('publishedText'))
+            length_seconds = livestream.LIVE_DURATION
+            err = livestream.prepare(videoId)
+            if err:
+                print(f"[live] {videoId}: {err}")
+                return _fail(MSG_LIVE_FAILED)
         try:
             length_int = int(length_seconds or 0)
         except (TypeError, ValueError):
             length_int = 0
-        if length_int > 45 * 60:
+        if length_int > 45 * 60 and not is_live:
             return _fail(MSG_TOO_LONG)
         safe_id = re.sub(r'[^A-Za-z0-9_-]', '', videoId)
         videofile_path = os.path.join(VIDEO_FOLDER, f"{safe_id}.webm")
-        if not os.path.exists(videofile_path):
+        if not is_live and not os.path.exists(videofile_path):
             job = _start_transcode_job(safe_id, videofile_path, max_duration=45 * 60)
             if job is not None:
                 if not job["ready"].wait(120):
@@ -76,6 +87,7 @@ class GetVideoInfo:
         response_str = (
             f"status=ok&"
             f"length_seconds={length_seconds}&"
+            f"live_playback={1 if is_live else 0}&"
             f"keywords=a&"
             f"vq=None&"
             f"muted=0&"
@@ -117,6 +129,10 @@ def get_video_info():
 def video_details(video_id):
     try:
         video_info = youtubei.get_video_info(video_id)
+        if video_info and video_info.get('isLive'):
+            livestream.remember_start(video_id, video_info.get('publishedText'))
+            video_info = dict(video_info, lengthSeconds=livestream.LIVE_DURATION,
+                              publishedText=livestream.started_text(video_id))
         if not video_info:
             return Response(
                 '<error>Video not found</error>',
@@ -175,6 +191,9 @@ def get_video():
     video_id = request.args.get('video_id')
     if not video_id:
         return "", 400
+
+    if livestream.is_live_id(video_id):
+        return livestream.stream_response(video_id)
 
     safe_id = re.sub(r'[^A-Za-z0-9_-]', '', video_id)
     videofile_path = os.path.join(VIDEO_FOLDER, f"{safe_id}.webm")
