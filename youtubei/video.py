@@ -68,6 +68,14 @@ def get_video_info(video_id):
             else:
                 author = owner_title.get('simpleText', '')
 
+        is_live = False
+        if primary_info:
+            try:
+                vcr = primary_info.get('viewCount', {}).get('videoViewCountRenderer', {})
+                is_live = bool(vcr.get('isLive'))
+            except Exception:
+                pass
+
         length_seconds = 0
         if title and author:
             try:
@@ -75,6 +83,8 @@ def get_video_info(video_id):
                 for result in search_results:
                     if result.get("videoId") == video_id:
                         length_seconds = result.get("lengthSeconds", 0)
+                        if result.get("liveNow"):
+                            is_live = True
                         break
             except Exception as e:
                 print(f"[youtubei] Error searching for video length: {e}")
@@ -111,7 +121,7 @@ def get_video_info(video_id):
             'averageRating': 0,
             'description': '',
             'keywords': [],
-            'isLive': False,
+            'isLive': is_live,
             'thumbnail': {
                 'thumbnails': [{'url': f'http://i.ytimg.com/vi/{video_id}/mqdefault.jpg', 'width': 320, 'height': 180}]
             }
