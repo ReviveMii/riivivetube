@@ -43,7 +43,7 @@ for i in $(seq 0 $((N-1))); do
     -vf "fps=$FPS,scale=-2:'min($HEIGHT,ih)':flags=fast_bilinear" \
     -c:v libvpx -deadline realtime -cpu-used 16 \
     -lag-in-frames 0 -auto-alt-ref 0 -g 300 \
-    -threads 1 -slices 4 -b:v 8M -crf 20 \
+    -threads 1 -slices 4 -b:v 1M -crf 20 \
     "$tmp/v$i.webm" &
   pids+=($!)
 done
