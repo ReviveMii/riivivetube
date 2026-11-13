@@ -26,8 +26,9 @@ from flask import Blueprint, request, Response, jsonify, stream_with_context
 import youtubei
 from config import VIDEO_FOLDER
 from extensions import limiter
-from transcode import _start_transcode_job, _get_transcode_job, _serve_cached_webm
+from transcode import _start_transcode_job, _get_transcode_job, _serve_cached_webm, send_discord_error
 import livestream
+import videostream
 
 bp = Blueprint('video', __name__)
 
@@ -43,6 +44,9 @@ def _fail(reason, code=150):
         content_type='text/plain'
     )
 
+_video_durations = {}
+
+
 class GetVideoInfo:
     def build(self, videoId):
         info = youtubei.get_video_info(videoId)
@@ -56,7 +60,6 @@ class GetVideoInfo:
             length_seconds = livestream.LIVE_DURATION
             err = livestream.prepare(videoId)
             if err:
-                print(f"[live] {videoId}: {err}")
                 return _fail(MSG_LIVE_FAILED)
         try:
             length_int = int(length_seconds or 0)
@@ -66,7 +69,15 @@ class GetVideoInfo:
             return _fail(MSG_TOO_LONG)
         safe_id = re.sub(r'[^A-Za-z0-9_-]', '', videoId)
         videofile_path = os.path.join(VIDEO_FOLDER, f"{safe_id}.webm")
-        if not is_live and not os.path.exists(videofile_path):
+        streaming = False
+        if not is_live and not os.path.exists(videofile_path) and videostream.STREAM_VIDEOS:
+            err = videostream.prepare_video(videoId)
+            if err:
+                send_discord_error(videoId, err)
+                return _fail(MSG_UNAVAILABLE)
+            _video_durations[safe_id] = length_int
+            streaming = True
+        elif not is_live and not os.path.exists(videofile_path):
             job = _start_transcode_job(safe_id, videofile_path, max_duration=45 * 60)
             if job is not None:
                 if not job["ready"].wait(120):
@@ -87,7 +98,7 @@ class GetVideoInfo:
         response_str = (
             f"status=ok&"
             f"length_seconds={length_seconds}&"
-            f"live_playback={1 if is_live else 0}&"
+            f"live_playback={1 if is_live or streaming else 0}&"
             f"keywords=a&"
             f"vq=None&"
             f"muted=0&"
@@ -201,6 +212,8 @@ def get_video():
     if os.path.exists(videofile_path):
         return _serve_cached_webm(videofile_path, safe_id)
 
+    if videostream.has_video_urls(safe_id) and videostream.STREAM_VIDEOS:
+        return videostream.stream_video(safe_id, _video_durations.get(safe_id) or livestream.LIVE_DURATION)
     job = _get_transcode_job(safe_id)
     if job is None:
         if os.path.exists(videofile_path):
