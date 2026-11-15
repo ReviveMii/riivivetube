@@ -24,6 +24,23 @@ import requests
 from concurrent.futures import ThreadPoolExecutor
 from .client import _get_base_headers, _build_context
 
+
+def _first_channel_id(obj):
+    if isinstance(obj, dict):
+        b = obj.get('browseId')
+        if isinstance(b, str) and b.startswith('UC'):
+            return b
+        for v in obj.values():
+            r = _first_channel_id(v)
+            if r:
+                return r
+    elif isinstance(obj, list):
+        for v in obj:
+            r = _first_channel_id(v)
+            if r:
+                return r
+    return ''
+
 def escape_xml(text):
     return saxutils.escape(text or "")
 
