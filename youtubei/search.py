@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import requests
 
 from .client import _get_base_headers, _build_context
-from .parsing import _parse_view_count, _extract_length_text_and_seconds, _extract_videos_from_items
+from .parsing import _first_channel_id, _parse_view_count, _extract_length_text_and_seconds, _extract_videos_from_items
 
 def innertube_search(query, region="US", max_results=50, params=""):
     url = "https://www.youtube.com/youtubei/v1/search"
@@ -56,7 +56,7 @@ def innertube_search(query, region="US", max_results=50, params=""):
                 owner_runs = vd.get("ownerText", {}).get("runs", [{}])
                 author = owner_runs[0].get("text", "")
                 nav = owner_runs[0].get("navigationEndpoint", {}).get("browseEndpoint", {})
-                authorId = nav.get("browseId", "")
+                authorId = nav.get("browseId", "") or _first_channel_id(vd.get("ownerText", {}))
                 authorUrl = nav.get("canonicalBaseUrl", "")
 
                 authorVerified = any(

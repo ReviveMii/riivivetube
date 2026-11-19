@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import requests
 
 from .client import _get_base_headers, _build_context
-from .parsing import _parse_view_count
+from .parsing import _parse_view_count, _first_channel_id
 from .search import innertube_search
 
 def get_video_info(video_id):
@@ -67,6 +67,8 @@ def get_video_info(video_id):
                 author_id = owner_runs[0].get('navigationEndpoint', {}).get('browseEndpoint', {}).get('browseId', '')
             else:
                 author = owner_title.get('simpleText', '')
+            if not author_id:
+                author_id = _first_channel_id(owner)
 
         is_live = False
         if primary_info:
